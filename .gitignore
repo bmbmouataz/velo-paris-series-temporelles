@@ -1,0 +1,37 @@
+# Données brutes et intermédiaires : volumineuses, recréées par R/01_import.R
+data/1_brut/
+data/2_intermediaire/
+
+# R
+.Rhistory
+.RData
+.Rapp.history
+.Rproj.user/
+*.Rproj
+
+# Quarto
+.quarto/
+rapport/*_files/
+
+# Python (environnement du LSTM)
+__pycache__/
+.venv/
+venv/
+
+# Secrets et configuration locale : ne jamais publier
+.env
+.env.*
+.Renviron
+*.pem
+*.key
+credentials*
+secrets*
+
+# Système et éditeurs
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*~

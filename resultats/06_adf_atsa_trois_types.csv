@@ -1,0 +1,49 @@
+serie,type,retards,ADF,p_valeur
+y = log(vélos),Type 1 : sans constante,0,-0.575022335404361,0.473243954710673
+y = log(vélos),Type 1 : sans constante,1,-0.536489851306082,0.487006944329435
+y = log(vélos),Type 1 : sans constante,2,-0.434574663897383,0.518858410096198
+y = log(vélos),Type 1 : sans constante,3,-0.343569981119922,0.54504467986859
+y = log(vélos),Type 1 : sans constante,4,-0.280862945145744,0.563088403669731
+y = log(vélos),Type 1 : sans constante,5,-0.193430980990851,0.588246636523406
+y = log(vélos),Type 1 : sans constante,6,-0.157977186852166,0.598448338122001
+y = log(vélos),Type 1 : sans constante,7,-0.212879333096236,0.582650443236238
+y = log(vélos),Type 2 : constante,0,-17.2541739112295,0.01
+y = log(vélos),Type 2 : constante,1,-17.9320487018399,0.01
+y = log(vélos),Type 2 : constante,2,-14.5842795638802,0.01
+y = log(vélos),Type 2 : constante,3,-12.9035430984054,0.01
+y = log(vélos),Type 2 : constante,4,-10.2210319299392,0.01
+y = log(vélos),Type 2 : constante,5,-6.27257791717299,0.01
+y = log(vélos),Type 2 : constante,6,-4.73336020475548,0.01
+y = log(vélos),Type 2 : constante,7,-6.40602345982148,0.01
+y = log(vélos),Type 3 : constante + tendance,0,-17.6208640547371,0.01
+y = log(vélos),Type 3 : constante + tendance,1,-18.3895255235551,0.01
+y = log(vélos),Type 3 : constante + tendance,2,-15.0141088527894,0.01
+y = log(vélos),Type 3 : constante + tendance,3,-13.3113092551041,0.01
+y = log(vélos),Type 3 : constante + tendance,4,-10.5744389352774,0.01
+y = log(vélos),Type 3 : constante + tendance,5,-6.51276046997129,0.01
+y = log(vélos),Type 3 : constante + tendance,6,-4.93829357962769,0.01
+y = log(vélos),Type 3 : constante + tendance,7,-6.66375212533458,0.01
+(I - B⁷) y,Type 1 : sans constante,0,-20.4561517189783,0.01
+(I - B⁷) y,Type 1 : sans constante,1,-15.3701560610366,0.01
+(I - B⁷) y,Type 1 : sans constante,2,-14.3391766270382,0.01
+(I - B⁷) y,Type 1 : sans constante,3,-14.6265551229646,0.01
+(I - B⁷) y,Type 1 : sans constante,4,-15.1945969958942,0.01
+(I - B⁷) y,Type 1 : sans constante,5,-15.6206096332552,0.01
+(I - B⁷) y,Type 1 : sans constante,6,-21.0173167137556,0.01
+(I - B⁷) y,Type 1 : sans constante,7,-13.785729309598,0.01
+(I - B⁷) y,Type 2 : constante,0,-20.4498182207596,0.01
+(I - B⁷) y,Type 2 : constante,1,-15.3653601553967,0.01
+(I - B⁷) y,Type 2 : constante,2,-14.334704589322,0.01
+(I - B⁷) y,Type 2 : constante,3,-14.6220408616402,0.01
+(I - B⁷) y,Type 2 : constante,4,-15.1899757690365,0.01
+(I - B⁷) y,Type 2 : constante,5,-15.6158745597335,0.01
+(I - B⁷) y,Type 2 : constante,6,-21.0110431753458,0.01
+(I - B⁷) y,Type 2 : constante,7,-13.7817020497704,0.01
+(I - B⁷) y,Type 3 : constante + tendance,0,-20.4432728311877,0.01
+(I - B⁷) y,Type 3 : constante + tendance,1,-15.3604333022105,0.01
+(I - B⁷) y,Type 3 : constante + tendance,2,-14.3302220179214,0.01
+(I - B⁷) y,Type 3 : constante + tendance,3,-14.6182473292016,0.01
+(I - B⁷) y,Type 3 : constante + tendance,4,-15.1858573605607,0.01
+(I - B⁷) y,Type 3 : constante + tendance,5,-15.6111164495048,0.01
+(I - B⁷) y,Type 3 : constante + tendance,6,-21.0047937660962,0.01
+(I - B⁷) y,Type 3 : constante + tendance,7,-13.7775393320575,0.01

@@ -1,0 +1,162 @@
+libelle,compteur,retenu,raison,premier_jour,part_valide,derive_max,niveau_moyen,dernier_valide,actif_a_la_fin,dans_panel_elargi
+135 avenue Daumesnil SE-NO,135 avenue daumesnil se-no,TRUE,retenu,2018-01-01,0.975287156282631,1.18332077482392,1546.5096359743,2026-11-12,TRUE,TRUE
+152 boulevard du Montparnasse E-O,152 boulevard du montparnasse e-o,TRUE,retenu,2018-12-07,0.943612948137835,1.07814530698617,1175.82220582811,2026-11-12,TRUE,TRUE
+152 boulevard du Montparnasse O-E,152 boulevard du montparnasse o-e,TRUE,retenu,2018-12-07,0.940480334145492,1.2587051167419,1096.25351591414,2026-11-12,TRUE,TRUE
+16 avenue de la Porte des Ternes E-O,16 avenue de la porte des ternes e-o,TRUE,retenu,2018-11-29,0.923773059519666,1.53096218153653,495.351921627732,2026-11-12,TRUE,TRUE
+18 quai de l'Hôtel de Ville NO-SE,18 quai de l hotel de ville no-se,TRUE,retenu,2018-01-01,0.979463974939088,1.3006555141649,685.212864250178,2026-11-12,TRUE,TRUE
+18 quai de l'Hôtel de Ville SE-NO,18 quai de l hotel de ville se-no,TRUE,retenu,2018-01-01,0.980508179603202,1.15309175629556,975.690095846645,2026-11-12,TRUE,TRUE
+21 boulevard Auguste Blanqui SO-NE,21 boulevard auguste blanqui so-ne,TRUE,retenu,2018-12-05,0.962756700313262,1.54599856921504,711.976138828634,2026-11-12,TRUE,TRUE
+243 boulevard Saint Germain NO-SE,243 boulevard saint germain no-se,TRUE,retenu,2018-12-13,0.979115906717717,1.22966490550992,1553.69818698898,2026-11-12,TRUE,TRUE
+27 boulevard Diderot E-O,27 boulevard diderot e-o,TRUE,retenu,2018-01-01,0.959276018099547,1.18904559698122,1300.77031930334,2026-11-12,TRUE,TRUE
+28 boulevard Diderot O-E,28 boulevard diderot o-e,TRUE,retenu,2018-01-01,0.903237034458754,1.30415255848982,1003.79113680154,2026-11-12,TRUE,FALSE
+6 rue Julia Bartet NE-SO,6 rue julia bartet ne-so,TRUE,retenu,2018-11-28,0.997215454229029,1.10642469096367,1396.82478184991,2026-11-12,TRUE,TRUE
+6 rue Julia Bartet SO-NE,6 rue julia bartet so-ne,TRUE,retenu,2018-11-28,0.997215454229029,1.19372636092343,1098.74659685864,2026-11-12,TRUE,TRUE
+67 boulevard Voltaire SE-NO,67 boulevard voltaire se-no,TRUE,retenu,2018-06-27,0.995823181343543,1.08349231876802,3387.81649772807,2026-11-12,TRUE,TRUE
+7 avenue de la Grande Armée NO-SE,7 avenue de la grande armee no-se,TRUE,retenu,2018-07-27,0.983292725374173,1.25116552864067,896.058761061947,2026-11-12,TRUE,TRUE
+72 boulevard Voltaire NO-SE,72 boulevard voltaire no-se,TRUE,retenu,2018-06-27,0.982248520710059,1.06716648355779,3550.56520198441,2026-10-18,TRUE,TRUE
+89 boulevard de Magenta NO-SE,89 boulevard de magenta no-se,TRUE,retenu,2018-11-28,0.997215454229029,1.1017724152663,4488.03315881326,2026-11-12,TRUE,TRUE
+97 avenue Denfert Rochereau SO-NE,97 avenue denfert rochereau so-ne,TRUE,retenu,2018-01-01,0.988513748694744,2.25095055771615,1192.10528169014,2026-11-12,TRUE,TRUE
+Face au 25 quai de l'Oise NE-SO,face au 25 quai de l oise ne-so,TRUE,retenu,2018-11-28,0.946049425687435,1.11894236549999,1413.6493745401,2026-11-12,TRUE,TRUE
+Face au 25 quai de l'Oise SO-NE,face au 25 quai de l oise so-ne,TRUE,retenu,2018-11-28,0.945701357466063,1.11168162588856,1459.61943319838,2026-11-12,TRUE,TRUE
+Face au 48 quai de la marne NE-SO,face au 48 quai de la marne ne-so,TRUE,retenu,2018-11-29,0.978071702053603,1.11429977248703,2264.20498220641,2026-11-12,TRUE,TRUE
+Face au 48 quai de la marne SO-NE,face au 48 quai de la marne so-ne,TRUE,retenu,2018-11-29,0.979115906717717,1.07617876525751,2449.06789904017,2026-11-12,TRUE,TRUE
+Face au 70 quai de Bercy N-S,face au 70 quai de bercy n-s,TRUE,retenu,2018-11-30,0.994430908458058,1.071421229846,1061.11130556528,2026-11-12,TRUE,TRUE
+Face au 70 quai de Bercy S-N,face au 70 quai de bercy s-n,TRUE,retenu,2018-11-30,0.994778976679429,1.09803683252791,912.543386983905,2026-11-12,TRUE,TRUE
+Pont National NE-SO,pont national ne-so,TRUE,retenu,2018-12-05,0.992690567351201,1.05473529215843,1775.8755259467,2026-11-12,TRUE,TRUE
+Pont du Garigliano NO-SE,pont du garigliano no-se,TRUE,retenu,2018-11-28,0.993734772015315,1.06106678296895,1478.80805604203,2026-11-12,TRUE,TRUE
+Voie Georges Pompidou NE-SO,voie georges pompidou ne-so,TRUE,retenu,2018-01-01,0.982248520710059,1.08505836197218,947.753366406804,2026-11-12,TRUE,TRUE
+Voie Georges Pompidou SO-NE,voie georges pompidou so-ne,TRUE,retenu,2018-01-01,0.982944657152802,1.13826330678524,1801.74681303116,2026-11-12,TRUE,TRUE
+10 Bd Auguste Blanqui NE-SO,10 bd auguste blanqui ne-so,FALSE,arrêté avant la fin,2018-12-06,0.126000696136443,1.49179422214014,642.975138121547,2019-12-30,FALSE,FALSE
+10 avenue de la Grande Armée SE-NO,10 avenue de la grande armee se-no,FALSE,seulement 85 % de jours valides,2018-07-27,0.849982596588932,1.51320773336133,732.834971334971,2026-11-12,TRUE,FALSE
+10 boulevard Auguste Blanqui NE-SO,10 boulevard auguste blanqui ne-so,FALSE,installé trop tard,2020-01-01,0.867386007657501,1.11250290964671,980.427367576244,2026-11-12,TRUE,TRUE
+100 rue La Fayette O-E,100 rue la fayette o-e,FALSE,arrêté avant la fin,2018-01-01,0.355377654020188,21.9057101675257,1246.78256611166,2022-11-14,FALSE,FALSE
+102 Bd magenta SE-NO,102 bd magenta se-no,FALSE,arrêté avant la fin,2018-11-29,0.126696832579186,1.49179422214014,2486.99175824176,2019-12-30,FALSE,FALSE
+102 boulevard de Magenta SE-NO,102 boulevard de magenta se-no,FALSE,installé trop tard,2020-01-01,0.870518621649844,1.19815754213246,4768.71331467413,2026-11-12,TRUE,TRUE
+105 rue La Fayette E-O,105 rue la fayette e-o,FALSE,arrêté avant la fin,2018-01-01,0.441698572920292,1.46724009351133,2260.8353033885,2022-11-14,FALSE,FALSE
+106 avenue Denfert Rochereau NE-SO,106 avenue denfert rochereau ne-so,FALSE,arrêté avant la fin,2018-01-01,0.632788026453185,72.8417913393517,1418.19856985699,2024-02-03,FALSE,FALSE
+12 avenue de la Porte de Bagnolet E-O,12 avenue de la porte de bagnolet e-o,FALSE,installé trop tard,2024-01-01,0.357466063348416,1.30968912641546,819.157740993184,2026-11-12,TRUE,FALSE
+12 avenue de la Porte de Bagnolet O-E,12 avenue de la porte de bagnolet o-e,FALSE,installé trop tard,2024-01-01,0.356769926905674,1.34147036880021,892.42243902439,2026-11-12,TRUE,FALSE
+124 boulevard MacDonald E-O,124 boulevard macdonald e-o,FALSE,installé trop tard,2024-01-01,0.342151061608075,1.30418090976907,1111.1017293998,2026-11-12,TRUE,FALSE
+129 rue Lecourbe SO-NE,129 rue lecourbe so-ne,FALSE,installé trop tard,2019-10-29,0.885833623390185,1.13721959791607,1173.85265225933,2026-11-12,TRUE,TRUE
+132 rue Lecourbe NE-SO,132 rue lecourbe ne-so,FALSE,installé trop tard,2019-10-30,0.878176122520014,1.29580356841696,1289.48315497424,2026-11-12,TRUE,TRUE
+147 avenue d'Italie S-N,147 avenue d italie s-n,FALSE,installé trop tard,2019-12-10,0.836756004176819,1.68771706537164,1133.38560732113,2026-11-12,TRUE,TRUE
+158 rue de Rivoli (Voie Bus),158 rue de rivoli voie bus,FALSE,installé trop tard,2021-01-01,0,,,,,FALSE
+158 rue de Rivoli (Voie Bus) O-E,158 rue de rivoli voie bus o-e,FALSE,installé trop tard,2022-01-01,0,,,,,FALSE
+163 boulevard Brune SE-NO,163 boulevard brune se-no,FALSE,installé trop tard,2023-01-25,0.479986077271145,1.38378462934231,1676.02900652647,2026-11-12,TRUE,FALSE
+173 boulevard MacDonald O-E,173 boulevard macdonald o-e,FALSE,installé trop tard,2024-01-01,0.362339018447616,1.19798598654495,1219.00864553314,2026-11-12,TRUE,FALSE
+180 avenue d'Italie N-S,180 avenue d italie n-s,FALSE,installé trop tard,2019-12-11,0.8771319178559,1.58673875467362,1089.83492063492,2026-11-12,TRUE,TRUE
+185 rue de Bercy 185 rue de Bercy [Bike IN],185 rue de bercy 185 rue de bercy bike in,FALSE,installé trop tard,2024-06-12,0.00870170553428472,1.12919600771346,110.28,2024-07-07,FALSE,FALSE
+185 rue de Bercy 185 rue de Bercy [Bike OUT],185 rue de bercy 185 rue de bercy bike out,FALSE,installé trop tard,2024-06-12,0.00800556909154194,1.12919600771346,19.4782608695652,2024-07-07,FALSE,FALSE
+2 avenue de la Porte de Bagnolet O-E,2 avenue de la porte de bagnolet o-e,FALSE,installé trop tard,2019-11-14,0.106508875739645,1.9606112330574,330.212418300654,2021-12-13,FALSE,FALSE
+20 Avenue de Clichy NO-SE,20 avenue de clichy no-se,FALSE,installé trop tard,2020-07-22,0.159415245388096,2.2057229272774,2037.56113537118,2022-01-24,FALSE,FALSE
+20 Avenue de Clichy SE-NO,20 avenue de clichy se-no,FALSE,installé trop tard,2020-07-22,0.158371040723982,1.23031065484134,2012.96263736264,2022-01-24,FALSE,FALSE
+21 boulevard Saint Michel S-N,21 boulevard saint michel s-n,FALSE,installé trop tard,2020-05-20,0.214061956143404,2.0906661729594,2565.34146341463,2022-03-26,FALSE,FALSE
+24 boulevard Jourdan E-O,24 boulevard jourdan e-o,FALSE,installé trop tard,2023-01-24,0.294117647058824,1.22147940102835,1629.06982248521,2026-11-12,TRUE,FALSE
+254 rue de Vaugirard NE-SO,254 rue de vaugirard ne-so,FALSE,installé trop tard,2020-11-29,0.224852071005917,1.837019194852,1474.39318885449,2022-12-22,FALSE,FALSE
+254 rue de Vaugirard SO-NE,254 rue de vaugirard so-ne,FALSE,installé trop tard,2020-11-29,0.224852071005917,1.36006887934957,1920.826625387,2022-12-22,FALSE,FALSE
+26 boulevard de Ménilmontant SE-NO,26 boulevard de menilmontant se-no,FALSE,arrêté avant la fin,2018-11-30,0.366863905325444,1.24038381707818,2645.76660341556,2022-04-14,FALSE,FALSE
+27 boulevard Davout N-S,27 boulevard davout n-s,FALSE,installé trop tard,2023-01-25,0.479986077271145,1.53177028192963,556.144307469181,2026-11-12,TRUE,FALSE
+27 quai de la Tournelle NO-SE,27 quai de la tournelle no-se,FALSE,installé trop tard,2019-11-14,0.869474416985729,1.41627329711427,2108.44635708567,2026-11-12,TRUE,TRUE
+27 quai de la Tournelle SE-NO,27 quai de la tournelle se-no,FALSE,installé trop tard,2019-11-14,0.869126348764358,1.203452747732,3443.08730476572,2026-11-12,TRUE,TRUE
+28 boulevard Diderot E-O,28 boulevard diderot e-o,FALSE,seulement 90 % de jours valides,2018-01-01,0.89975635224504,5.08818775676686,318.714893617021,2026-11-12,TRUE,FALSE
+29 boulevard des Batignolles 29 boulevard des Batignolles Trottinettes IN,29 boulevard des batignolles 29 boulevard des batignolles trottinettes in,FALSE,installé trop tard,2024-01-01,0.253045596937,1.24024850461335,207.580467675378,2025-12-31,FALSE,FALSE
+29 boulevard des Batignolles 29 boulevard des Batignolles Trottinettes OUT,29 boulevard des batignolles 29 boulevard des batignolles trottinettes out,FALSE,installé trop tard,2024-01-01,0.252001392272885,1.36613880687108,71.25,2025-12-31,FALSE,FALSE
+29 boulevard des Batignolles E-O,29 boulevard des batignolles e-o,FALSE,installé trop tard,2024-01-01,0.32579185520362,1.21487764985867,1236.7735042735,2026-11-12,TRUE,FALSE
+29 boulevard des Batignolles O-E,29 boulevard des batignolles o-e,FALSE,installé trop tard,2024-01-01,0.359902540898016,1.27014057211493,3189.19052224371,2026-11-12,TRUE,FALSE
+3 avenue de la Porte D'Orléans (gare routière) S-N,3 avenue de la porte d orleans gare routiere s-n,FALSE,installé trop tard,2021-01-01,0.23807866341803,1.0272997777941,63.3377192982456,2022-11-15,FALSE,FALSE
+3 avenue de la Porte D'Orléans S-N,3 avenue de la porte d orleans s-n,FALSE,installé trop tard,2019-11-07,0.145492516533241,2.10090674925564,82.4521531100479,2020-12-31,FALSE,FALSE
+30 rue Saint Jacques (temporaire) N-S,30 rue saint jacques temporaire n-s,FALSE,installé trop tard,2022-01-01,0,,,,,FALSE
+30 rue Saint Jacques N-S,30 rue saint jacques n-s,FALSE,installé trop tard,2020-05-20,0.274973894883397,1.22586453504252,2635.20253164557,2023-06-25,FALSE,FALSE
+30 rue Saint Jacques N-S (temporaire),30 rue saint jacques n-s temporaire,FALSE,installé trop tard,2021-01-01,0.0696136442742778,1.07827085505363,333.19,2021-07-19,FALSE,FALSE
+33 avenue des Champs Elysées NO-SE,33 avenue des champs elysees no-se,FALSE,installé trop tard,2019-10-30,0.870170553428472,1.34796573142523,2260.7032,2026-11-12,TRUE,TRUE
+35 boulevard de Ménilmontant NO-SE,35 boulevard de menilmontant no-se,FALSE,seulement 82 % de jours valides,2018-11-30,0.823181343543335,1.34919570649849,3882.75813953488,2026-11-12,TRUE,FALSE
+36 avenue de la Grande Armée E-O,36 avenue de la grande armee e-o,FALSE,installé trop tard,2024-05-28,0.201531500174034,1.16918145296064,2294.25388601036,2025-12-31,FALSE,FALSE
+36 quai de Grenelle NE-SO,36 quai de grenelle ne-so,FALSE,installé trop tard,2019-11-14,0.886181691611556,1.16150270727821,2222.87941869599,2026-11-12,TRUE,TRUE
+36 quai de Grenelle SO-NE,36 quai de grenelle so-ne,FALSE,installé trop tard,2019-11-14,0.886181691611556,1.45148741730367,1441.40141398272,2026-11-12,TRUE,TRUE
+38 rue Turbigo NE-SO,38 rue turbigo ne-so,FALSE,installé trop tard,2019-12-10,0.873999303863557,1.33775221082703,2645.60175228992,2026-11-12,TRUE,TRUE
+38 rue Turbigo SO-NE,38 rue turbigo so-ne,FALSE,installé trop tard,2019-12-10,0.874347372084929,1.44878089478411,3001.50915605096,2026-11-12,TRUE,TRUE
+39 avenue de la Grande Armée O-E,39 avenue de la grande armee o-e,FALSE,installé trop tard,2024-05-28,0.202227636616777,1.18850100938118,1767.56454388985,2025-12-31,FALSE,FALSE
+39 quai François Mauriac NO-SE,39 quai francois mauriac no-se,FALSE,arrêté avant la fin,2018-01-01,0.931430560389836,1.062991422146,1393.20964125561,2026-07-05,FALSE,FALSE
+39 quai François Mauriac SE-NO,39 quai francois mauriac se-no,FALSE,arrêté avant la fin,2018-01-01,0.930386355725722,1.10618536114423,1471.65843621399,2026-07-05,FALSE,FALSE
+42 boulevard Soult N-S,42 boulevard soult n-s,FALSE,installé trop tard,2023-01-26,0.478941872607031,1.19003354224451,958.386627906977,2026-11-12,TRUE,FALSE
+42 boulevard Soult S-N,42 boulevard soult s-n,FALSE,installé trop tard,2023-01-26,0.47859380438566,1.19005770653101,1610.81527272727,2026-11-12,TRUE,FALSE
+44 avenue des Champs Elysées SE-NO,44 avenue des champs elysees se-no,FALSE,installé trop tard,2019-10-30,0.832231117298991,1.54607288293278,1883.5165202844,2026-11-12,TRUE,TRUE
+46 boulevard Davout S-N,46 boulevard davout s-n,FALSE,installé trop tard,2024-01-01,0.359206404455273,1.20984690791782,1357.49031007752,2026-11-12,TRUE,FALSE
+5 boulevard Victor SE-NO,5 boulevard victor se-no,FALSE,installé trop tard,2024-01-01,0.361990950226244,1.25698306637692,1593.77403846154,2026-11-12,TRUE,FALSE
+51 boulevard Masséna SO-NE,51 boulevard massena so-ne,FALSE,installé trop tard,2024-01-01,0.277758440654368,1.44595162139531,1193.85463659148,2026-11-12,TRUE,FALSE
+51 boulevard du Général Martial Valin SE-NO,51 boulevard du general martial valin se-no,FALSE,installé trop tard,2023-02-02,0.475461190393317,1.23028722111017,1553.45314787701,2026-11-12,TRUE,FALSE
+56 boulevard Kellermann E-O,56 boulevard kellermann e-o,FALSE,installé trop tard,2023-01-25,0.480334145492517,1.21002465170267,1462.68405797101,2026-11-12,TRUE,FALSE
+62 boulevard Ney E-O,62 boulevard ney e-o,FALSE,installé trop tard,2024-01-01,0.336581970066133,1.29141726316737,1331.64012409514,2026-11-12,TRUE,FALSE
+63 boulevard des Invalides N-S,63 boulevard des invalides n-s,FALSE,installé trop tard,2024-05-29,0.202227636616777,1.17090336073255,345.681583476764,2025-12-31,FALSE,FALSE
+63 boulevard des Invalides S-N,63 boulevard des invalides s-n,FALSE,installé trop tard,2024-05-29,0.202227636616777,1.19894986167639,802.432013769363,2025-12-31,FALSE,FALSE
+69 Boulevard Ornano (temporaire) N-S,69 boulevard ornano temporaire n-s,FALSE,installé trop tard,2022-01-01,0,,,,,FALSE
+69 Boulevard Ornano N-S,69 boulevard ornano n-s,FALSE,installé trop tard,2020-07-22,0.143056038983641,1.25913199972457,1799.77858880779,2022-12-22,FALSE,FALSE
+69 Boulevard Ornano N-S (temporaire),69 boulevard ornano n-s temporaire,FALSE,installé trop tard,2021-01-01,0.0462930734423947,1.07827085505363,1182.72180451128,2021-08-08,FALSE,FALSE
+72 Avenue Flandre SO-NE,72 avenue flandre so-ne,FALSE,installé trop tard,2019-11-13,0.0163592064044553,1.49179422214014,1410.48936170213,2019-12-30,FALSE,FALSE
+72 Bd Richard Lenoir  S-N,72 bd richard lenoir s-n,FALSE,arrêté avant la fin,2018-12-05,0.0807518273581622,1.49179422214014,2171.52586206897,2019-12-30,FALSE,FALSE
+72 avenue de Flandre SO-NE,72 avenue de flandre so-ne,FALSE,installé trop tard,2020-01-01,0.870518621649844,1.27676972661689,2007.85285885646,2026-11-12,TRUE,TRUE
+72 boulevard Brune NO-SE,72 boulevard brune no-se,FALSE,installé trop tard,2023-01-24,0.480334145492517,1.25627599267394,1227.30869565217,2026-11-12,TRUE,FALSE
+72 boulevard Richard Lenoir S-N,72 boulevard richard lenoir s-n,FALSE,installé trop tard,2020-01-01,0.86216498433693,1.19976130342225,3285.55349212757,2026-11-12,TRUE,TRUE
+72 rue de la Chapelle N-S,72 rue de la chapelle n-s,FALSE,installé trop tard,2019-11-04,0.40097459101984,1.6991359925957,69.7282986111111,2022-12-31,FALSE,FALSE
+72 rue de la Chapelle S-N,72 rue de la chapelle s-n,FALSE,installé trop tard,2019-11-04,0.40097459101984,2.33844890459052,112.068576388889,2022-12-31,FALSE,FALSE
+74 Boulevard Ornano S-N,74 boulevard ornano s-n,FALSE,installé trop tard,2020-07-22,0.0981552384267316,1.20671467603056,1358.44680851064,2021-08-29,FALSE,FALSE
+77 Bd Richard Lenoir N-S,77 bd richard lenoir n-s,FALSE,arrêté avant la fin,2018-12-05,0.0824921684650191,1.49179422214014,1715.0970464135,2019-12-30,FALSE,FALSE
+77 boulevard Masséna NE-SO,77 boulevard massena ne-so,FALSE,installé trop tard,2023-01-26,0.480334145492517,1.24405342917859,649.171014492754,2026-11-12,TRUE,FALSE
+77 boulevard Masséna SO-NE,77 boulevard massena so-ne,FALSE,installé trop tard,2023-01-26,0.480334145492517,1.32228154111455,1569.19492753623,2026-11-12,TRUE,FALSE
+77 boulevard Richard Lenoir N-S,77 boulevard richard lenoir n-s,FALSE,installé trop tard,2020-01-01,0.859380438565959,1.20148369281181,2768.33292831106,2026-11-12,TRUE,TRUE
+8 avenue de la Porte de Châtillon 8 avenue de la Porte de Châtillon Vélos,8 avenue de la porte de chatillon 8 avenue de la porte de chatillon velos,FALSE,installé trop tard,2024-06-12,0.0170553428471981,1.12919600771346,1131.44897959184,2024-07-31,FALSE,FALSE
+8 boulevard d'Indochine N-S,8 boulevard d indochine n-s,FALSE,installé trop tard,2024-01-01,0.362339018447616,1.20748735090946,718.317002881844,2026-11-12,TRUE,FALSE
+8 boulevard d'Indochine S-N,8 boulevard d indochine s-n,FALSE,installé trop tard,2024-01-01,0.362339018447616,1.21307928283927,683.189241114313,2026-11-12,TRUE,FALSE
+81 boulevard Mortier N-S,81 boulevard mortier n-s,FALSE,installé trop tard,2023-01-31,0.477201531500174,1.29736784654336,772.828592268417,2026-11-12,TRUE,FALSE
+81 boulevard Mortier S-N,81 boulevard mortier s-n,FALSE,installé trop tard,2023-01-31,0.477897667942917,1.33965142775674,521.564457392571,2026-11-12,TRUE,FALSE
+86 boulevard du Général Jean Simon NE-SO,86 boulevard du general jean simon ne-so,FALSE,installé trop tard,2024-01-01,0.361990950226244,1.20754282492027,1860.99807692308,2026-11-12,TRUE,FALSE
+86 rue de la Chapelle IN [Bike],86 rue de la chapelle in bike,FALSE,installé trop tard,2024-05-29,0.202227636616777,1.21342418586113,421.447504302926,2025-12-31,FALSE,FALSE
+87 avenue de Flandre NE-SO,87 avenue de flandre ne-so,FALSE,installé trop tard,2019-11-05,0.887573964497041,1.22192357823545,2294.12352941176,2026-11-12,TRUE,TRUE
+9 boulevard Jourdan O-E,9 boulevard jourdan o-e,FALSE,installé trop tard,2023-01-24,0.477897667942917,1.32127457577282,1656.8914785142,2026-11-12,TRUE,FALSE
+90 Rue De Sèvres NE-SO,90 rue de sevres ne-so,FALSE,installé trop tard,2020-07-22,0.399234249912983,4.9126506167723,1366.46469049695,2023-09-14,FALSE,FALSE
+90 Rue De Sèvres SO-NE,90 rue de sevres so-ne,FALSE,installé trop tard,2020-07-22,0.399582318134354,1.20623833534612,680.3893728223,2023-09-14,FALSE,FALSE
+91 quai Jacques Chirac S-N,91 quai jacques chirac s-n,FALSE,installé trop tard,2024-05-28,0.197006613296206,1.20669549384858,350.236749116608,2025-12-31,FALSE,FALSE
+98 boulevard Poniatowski NE-SO,98 boulevard poniatowski ne-so,FALSE,installé trop tard,2023-02-01,0.477201531500174,1.19082297812268,1045.00875273523,2026-11-12,TRUE,FALSE
+98 boulevard Poniatowski SO-NE,98 boulevard poniatowski so-ne,FALSE,installé trop tard,2023-02-01,0.477201531500174,1.20024420418796,1487.27060539752,2026-11-12,TRUE,FALSE
+Face 104 rue d'Aubervilliers N-S,face 104 rue d aubervilliers n-s,FALSE,arrêté avant la fin,2018-11-29,0.885137486947442,1.50148052204623,1109.04286276052,2026-02-19,FALSE,FALSE
+Face 104 rue d'Aubervilliers S-N,face 104 rue d aubervilliers s-n,FALSE,arrêté avant la fin,2018-11-29,0.885137486947442,1.92389796073124,904.330318521431,2026-02-19,FALSE,FALSE
+Face au 16 avenue de la  Porte des Ternes O-E,face au 16 avenue de la porte des ternes o-e,FALSE,seulement 90 % de jours valides,2018-11-28,0.895579533588583,1.22142774135215,656.09521958803,2026-11-12,TRUE,FALSE
+Face au 21 boulevard de Ménilmontant SE-NO,face au 21 boulevard de menilmontant se-no,FALSE,installé trop tard,2024-01-01,0.361990950226244,1.27302093940143,2925.65288461539,2026-11-12,TRUE,FALSE
+Face au 4 avenue de la porte de Bagnolet E-O,face au 4 avenue de la porte de bagnolet e-o,FALSE,installé trop tard,2019-11-06,0.887922032718413,1.16455863812764,1143.49823598589,2026-11-12,TRUE,TRUE
+Face au 4 avenue de la porte de Bagnolet O-E,face au 4 avenue de la porte de bagnolet o-e,FALSE,installé trop tard,2019-11-06,0.887922032718413,1.48163420207108,670.210505684046,2026-11-12,TRUE,TRUE
+Face au 40 quai D'Issy NE-SO,face au 40 quai d issy ne-so,FALSE,installé trop tard,2019-11-05,0.888618169161156,2.11589222378166,514.202506854681,2026-11-12,TRUE,TRUE
+Face au 40 quai D'Issy SO-NE,face au 40 quai d issy so-ne,FALSE,installé trop tard,2019-11-05,0.886877828054299,1.84961572365665,375.552197802198,2026-11-12,TRUE,TRUE
+Face au 49 boulevard du Général Martial Valin NO-SE,face au 49 boulevard du general martial valin no-se,FALSE,installé trop tard,2023-02-02,0.477897667942917,1.19482912741635,1307.72906045157,2026-11-12,TRUE,FALSE
+Face au 8 avenue de la Porte de Châtillon Face au 8 avenue de la Porte de Châtillon Vélos,face au 8 avenue de la porte de chatillon face au 8 avenue de la porte de chatillon velos,FALSE,installé trop tard,2024-06-12,0.0699617124956491,1.12919600771346,926.228855721393,2024-12-31,FALSE,FALSE
+Face au 8 avenue de la porte de Charenton NO-SE,face au 8 avenue de la porte de charenton no-se,FALSE,installé trop tard,2019-11-01,0.888270100939784,3.38949207290506,336.902821316614,2026-11-12,TRUE,FALSE
+Face au 8 avenue de la porte de Charenton SE-NO,face au 8 avenue de la porte de charenton se-no,FALSE,installé trop tard,2019-11-01,0.885833623390185,8.89179809326708,496.847937131631,2026-11-12,TRUE,FALSE
+Face au 81 Quai d'Orsay Face au 81 Quai d'Orsay Vélos IN,face au 81 quai d orsay face au 81 quai d orsay velos in,FALSE,installé trop tard,2024-06-12,0.00208840932822833,1.12919600771346,3100,2024-11-18,FALSE,FALSE
+Face au 81 Quai d'Orsay Face au 81 Quai d'Orsay Vélos OUT,face au 81 quai d orsay face au 81 quai d orsay velos out,FALSE,installé trop tard,2024-06-12,0.00139227288548556,1.12919600771346,3901.75,2024-06-16,FALSE,FALSE
+Face au 84 boulevard Ney O-E,face au 84 boulevard ney o-e,FALSE,installé trop tard,2024-01-01,0.360598677340759,1.25729894234316,1351.46138996139,2026-11-12,TRUE,FALSE
+Pont Charles De Gaulle NE-SO,pont charles de gaulle ne-so,FALSE,installé trop tard,2019-12-12,0.869822485207101,1.20073991674689,1069.89795918367,2026-11-12,TRUE,TRUE
+Pont Charles De Gaulle SO-NE,pont charles de gaulle so-ne,FALSE,installé trop tard,2019-12-12,0.872607030978072,1.28193492374789,1036.91663342641,2026-11-12,TRUE,TRUE
+Pont National SO-NE,pont national so-ne,FALSE,niveau qui dérive (x61.2),2018-12-05,0.915419422206753,61.2379907908424,685.749429657795,2026-11-12,TRUE,FALSE
+Pont de Bercy NE-SO,pont de bercy ne-so,FALSE,installé trop tard,2019-12-11,0.8771319178559,1.17990580098223,1209.63055555556,2026-11-12,TRUE,TRUE
+Pont de Bercy SO-NE,pont de bercy so-ne,FALSE,installé trop tard,2019-12-11,0.876783849634528,1.18919140209833,1085.53791186979,2026-11-12,TRUE,TRUE
+Pont de l'Alma S-N,pont de l alma s-n,FALSE,installé trop tard,2024-05-27,0.197006613296206,1.263501541806,2836.80565371025,2025-12-31,FALSE,FALSE
+Pont de la Concorde N-S,pont de la concorde n-s,FALSE,installé trop tard,2019-11-08,0.862861120779673,1.21823180252612,2654.72287212586,2026-11-12,TRUE,TRUE
+Pont de la Concorde S-N,pont de la concorde s-n,FALSE,installé trop tard,2019-11-08,0.865993734772015,1.48469022520279,2589.46422829582,2026-11-12,TRUE,TRUE
+Pont des Invalides (couloir bus) N-S,pont des invalides couloir bus n-s,FALSE,installé trop tard,2024-01-01,0.349460494256874,1.38380789394564,1395.51494023904,2026-11-12,TRUE,FALSE
+Pont des Invalides N-S,pont des invalides n-s,FALSE,installé trop tard,2019-11-07,0.526627218934911,1.34928499752004,601.399867812294,2023-12-31,FALSE,FALSE
+Pont des Invalides S-N,pont des invalides s-n,FALSE,installé trop tard,2019-11-07,0.876783849634528,1.60813224498855,1048.12624057166,2026-11-12,TRUE,TRUE
+Pont du Garigliano SE-NO,pont du garigliano se-no,FALSE,installé trop tard,2020-01-01,0.870518621649844,1.16778821015864,1197.46341463415,2026-11-12,TRUE,TRUE
+Pont du Garigliano SE-NO SE-NO,pont du garigliano se-no se-no,FALSE,arrêté avant la fin,2018-12-06,0.126696832579186,1.49179422214014,757.266483516484,2019-12-30,FALSE,FALSE
+Quai d'Orsay E-O,quai d orsay e-o,FALSE,installé trop tard,2019-11-07,0.877479986077271,1.52202352981554,3528.6108687029,2026-11-12,TRUE,TRUE
+Quai d'Orsay O-E,quai d orsay o-e,FALSE,installé trop tard,2019-11-07,0.877828054298643,2.11945432248714,2529.50991276765,2026-11-12,TRUE,TRUE
+Quai des Tuileries NO-SE,quai des tuileries no-se,FALSE,installé trop tard,2021-01-01,0.677340758788723,1.55921949728667,1959.81449126413,2026-11-12,TRUE,FALSE
+Quai des Tuileries SE-NO,quai des tuileries se-no,FALSE,installé trop tard,2021-01-01,0.663766098155239,1.82499528057491,1498.17671735711,2026-11-11,TRUE,FALSE
+Totem 64 Rue de Rivoli E-O,totem 64 rue de rivoli e-o,FALSE,installé trop tard,2019-09-04,0.779672815871911,1.23689326413004,3876.51205357143,2026-11-12,TRUE,FALSE
+Totem 64 Rue de Rivoli O-E,totem 64 rue de rivoli o-e,FALSE,installé trop tard,2019-09-04,0.780020884093282,1.28453024986538,4896.74564926372,2026-11-12,TRUE,FALSE
+Totem 64 Rue de Rivoli Totem 64 Rue de Rivoli Vélos E-O,totem 64 rue de rivoli totem 64 rue de rivoli velos e-o,FALSE,installé trop tard,2023-01-01,0.125652627915071,1.13008359156704,4111.57617728532,2023-12-31,FALSE,FALSE
+Totem 64 Rue de Rivoli Totem 64 Rue de Rivoli Vélos O-E,totem 64 rue de rivoli totem 64 rue de rivoli velos o-e,FALSE,installé trop tard,2023-01-01,0.125652627915071,1.13008359156704,5249.8836565097,2023-12-31,FALSE,FALSE
+Totem 73 boulevard de Sébastopol N-S,totem 73 boulevard de sebastopol n-s,FALSE,installé trop tard,2020-02-11,0.848590323703446,1.30822136006353,5383.03199343724,2026-11-12,TRUE,FALSE
+Totem 73 boulevard de Sébastopol S-N,totem 73 boulevard de sebastopol s-n,FALSE,installé trop tard,2020-02-11,0.848590323703446,1.31217613986957,7264.71493027071,2026-11-12,TRUE,FALSE
+Totem 85 quai d'Austerlitz NO-SE,totem 85 quai d austerlitz no-se,FALSE,installé trop tard,2020-02-18,0.846849982596589,1.13686617591888,1948.49075215783,2026-11-12,TRUE,FALSE
+Totem 85 quai d'Austerlitz SE-NO,totem 85 quai d austerlitz se-no,FALSE,installé trop tard,2020-02-18,0.847546119039332,1.24687261122989,2637.03121149897,2026-11-12,TRUE,FALSE
+Totem Cours la Reine E-O,totem cours la reine e-o,FALSE,installé trop tard,2020-02-11,0.812391228680822,3.22976004874467,1100.82133676093,2026-11-12,TRUE,FALSE
+Totem Cours la Reine O-E,totem cours la reine o-e,FALSE,installé trop tard,2020-02-11,0.809258614688479,2.47815632182643,2609.47225806452,2026-11-12,TRUE,FALSE

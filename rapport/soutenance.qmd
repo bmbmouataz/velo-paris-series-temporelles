@@ -1,0 +1,232 @@
+---
+title: "Le vélo à Paris"
+subtitle: "Comprendre et prévoir le trafic cyclable"
+date: today
+lang: fr
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    embed-resources: true
+    width: 1280
+    height: 760
+    margin: 0.04
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| include: false
+library(data.table)
+r <- function(f) fread(file.path("..", "resultats", f))
+f <- function(x, k = 0) formatC(x, format = "f", digits = k, big.mark = " ", decimal.mark = ",")
+pc <- function(x, k = 0) paste0(f(x, k), " %")
+parts <- r("08_part_expliquee.csv"); glob <- r("10_scores_globaux.csv"); par_h <- r("10_scores_par_horizon.csv")
+ev <- r("05_effets_evenements.csv"); sx_c <- r("08_coefficients_sarimax.csv"); comp <- r("08_sarima_contre_sarimax.csv")
+mape <- function(m, hh) par_h[modele == m & h == hh, MAPE]
+veille <- r("08_meteo_du_jour_ou_de_la_veille.csv"); s11 <- r("07_sarima_d1D1.csv"); cgarch <- r("07_comparaison_garch.csv")
+eff <- function(p) 100 * (exp(sx_c[parametre == p, estimation]) - 1)
+fig <- function(dossier, nom) knitr::include_graphics(file.path("..", "figures", dossier, nom))
+```
+
+## La question
+
+> Quelle part du trafic cyclable parisien s'explique par le **calendrier**, la **météo** et les **événements**, et peut-on le **prévoir** à quelques jours ?
+
+- Comptages horaires des compteurs vélo de la Ville de Paris, 2019 – 2026
+- Météo Paris-Montsouris, jours fériés, vacances scolaires
+- Démarche : exploration → décomposition → stationnarité → SARIMA → SARIMAX → concurrents → évaluation
+
+## Une série construite avec soin
+
+```{r}
+#| out-width: "100%"
+fig("03_exploration", "01_serie_complete.png")
+```
+
+Panel fixe de **27 compteurs** fiables depuis 2019 (sinon fausse tendance) ; 2,7 % de jours de panne détectés et remplacés.
+
+## Deux saisons et un modèle multiplicatif
+
+:::: {.columns}
+::: {.column width="50%"}
+```{r}
+fig("03_exploration", "06_carte_semaine_annee.png")
+```
+:::
+::: {.column width="50%"}
+```{r}
+fig("03_exploration", "11_periodogramme.png")
+```
+:::
+::::
+
+Semaine (pics à 1/7, 2/7, 3/7) et année (1/365) ; écart-type ∝ niveau → **log**.
+
+## Météo et calendrier
+
+```{r}
+#| out-width: "90%"
+fig("03_exploration", "12_meteo.png")
+```
+
+## Décomposition (MSTL, Fourier, Prophet)
+
+:::: {.columns}
+::: {.column width="55%"}
+```{r}
+fig("04_decomposition", "03_mstl_deux_saisons.png")
+```
+:::
+::: {.column width="45%"}
+```{r}
+fig("04_decomposition", "04_mstl_variance_amplitude.png")
+```
+- Moyenne mobile d'ordre 7 : gain nul en 1/7, 2/7, 3/7
+- `decompose` (1 saison) ne suffit pas
+:::
+::::
+
+## Ruptures et événements
+
+:::: {.columns}
+::: {.column width="50%"}
+```{r}
+fig("05_ruptures", "02_ruptures_multiples.png")
+```
+CUSUM : stabilité rejetée sur 2019-2025, **acceptée depuis juin 2021** → période d'apprentissage.
+:::
+::: {.column width="50%"}
+```{r}
+fig("05_ruptures", "04_analyse_intervention.png")
+```
+:::
+::::
+
+## Stationnarité
+
+```{r}
+#| out-width: "85%"
+fig("06_stationnarite", "01_tableau_tests.png")
+```
+
+log(vélos) : stationnaire **autour d'une tendance** (d = 0) ; (I − B⁷) supprime la semaine.
+
+## SARIMA(3,0,3)(1,1,2)₇
+
+:::: {.columns}
+::: {.column width="50%"}
+```{r}
+fig("07_sarima", "04_coefficients_racines.png")
+```
+:::
+::: {.column width="50%"}
+- 120 modèles, choix par **BIC**
+- Coefficients significatifs, résidus **non corrélés**
+- Mais MA saisonnier = (1 − z)(1 − 0,62 z) : **racine unité**
+- → sur-différenciation : la semaine est **déterministe**
+- Résidus non gaussiens, **effet ARCH** (GARCH : la volatilité monte aux fêtes)
+:::
+::::
+
+## Diagnostic des résidus
+
+```{r}
+#| out-width: "70%"
+fig("07_sarima", "05_diagnostic_residus.png")
+```
+
+## Compléments de diagnostic
+
+:::: {.columns}
+::: {.column width="50%"}
+```{r}
+fig("07_sarima", "13_garch_complet.png")
+```
+:::
+::: {.column width="50%"}
+- **Wold** : ψ_k calculés à la main = intervalles de `forecast()`
+- **Yule-Walker** : PACF = φ_hh, retrouvée exactement
+- **GARCH** : BIC → `r cgarch[which.min(BIC), modele]`, σ stationnaire = `r f(cgarch[modele == "GARCH(1,1)", sigma_stationnaire], 3)`
+- **BDS** rejette i.i.d. : bruit blanc **faible**, pas fort
+- **(d, D) = (1, 1)** : racine MA |z| = `r f(s11$racine_ma_min, 3)` → double sur-différenciation
+- Correction **e^{σ²/2}** au retour du log
+:::
+::::
+
+## SARIMAX : semaine + Fourier + calendrier + météo
+
+```{r}
+#| out-width: "80%"
+fig("08_sarimax", "02_effets_variables.png")
+```
+
+Férié `r pc(eff("ferie"))` · Noël `r pc(eff("vacances_noel"))` · JO `r sprintf("%+.0f %%", eff("jeux_olympiques"))` · +1 °C `r sprintf("%+.1f %%", eff("temperature"))` · erreur à 1 jour **−`r pc(100 * (1 - comp$ecart_type_erreur_1_jour[2] / comp$ecart_type_erreur_1_jour[1]))`** par rapport au SARIMA.
+
+## Météo du jour ou de la veille ?
+
+:::: {.columns}
+::: {.column width="55%"}
+```{r}
+fig("08_sarimax", "09_ccf_meteo_trafic.png")
+```
+:::
+::: {.column width="45%"}
+```{r}
+fig("08_sarimax", "10_meteo_du_jour_ou_veille.png")
+```
+:::
+::::
+
+CCF : la pluie agit **le jour même**. Météo de la veille : σ = `r f(veille$ecart_type_erreur[2], 3)` ≈ sans météo (`r f(veille$ecart_type_erreur[3], 3)`) → il faut une **prévision météo**.
+
+## Réponse : quelle part s'explique par quoi ?
+
+```{r}
+#| out-width: "85%"
+fig("08_sarimax", "07_part_expliquee.png")
+```
+
+Calendrier (semaine, saison, fériés, vacances) ≈ **`r pc(100 * sum(parts$part[2:4]))`**, météo ≈ **`r pc(100 * parts$part[5])`**, dynamique ARMA `r pc(100 * parts$part[6])`.
+
+## Quatorze modèles en concurrence
+
+```{r}
+#| out-width: "75%"
+fig("09_concurrents", "06_comparaison_28_jours.png")
+```
+
+14 modèles : naïf, SARIMA (deux différenciations), SARIMAX (trois scénarios météo), lissages simple / Holt / Holt-Winters, TBATS, Prophet, blocs à noyau calibrés par validation croisée, NNAR, LSTM.
+
+## Évaluation : 352 origines × 14 horizons
+
+```{r}
+#| out-width: "90%"
+fig("10_evaluation", "01_erreur_selon_horizon.png")
+```
+
+À 1 jour : **SARIMAX** `r pc(mape("SARIMAX (météo observée)", 1), 1)` · au-delà : **Prophet** ≈ `r pc(glob[modele == "Prophet", MAPE], 0)` · naïf : `r pc(mape("Naïf saisonnier", 1), 0)` à 1 jour.
+
+## La météo, clé de la prévision
+
+```{r}
+#| out-width: "90%"
+fig("10_evaluation", "04_valeur_de_la_meteo.png")
+```
+
+## Prévision : 12 – 25 novembre 2026
+
+```{r}
+#| out-width: "90%"
+fig("10_evaluation", "08_prevision_14_prochains_jours.png")
+```
+
+## Conclusion
+
+- Le trafic cyclable parisien est d'abord **rythmé par le calendrier**, puis par la **pluie**
+- Démarche Box-Jenkins complète : log, stationnarité autour d'une tendance, SARIMA → racine unité MA saisonnière → semaine déterministe → SARIMAX
+- Prévoir à quelques jours : oui, **si l'on dispose d'une prévision météo**
+- Limites : queues épaisses, jours exceptionnels (neige, réveillons, journée sans voiture)
+- Extension : modèle horaire (saisons 24 h et 168 h)

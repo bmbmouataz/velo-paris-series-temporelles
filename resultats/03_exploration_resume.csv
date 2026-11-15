@@ -1,0 +1,9 @@
+indicateur,valeur
+Jours,2872
+Vélos par jour (moyenne),41967
+Élasticité écart-type / moyenne (brut),0.77
+Lambda de Box-Cox (Guerrero),0.43
+Effet médian d'une pluie > 10 mm,-25
+Effet médian d'un jour férié,-40
+Trafic week-end / semaine (2019),0.64
+Trafic week-end / semaine (2025),0.66

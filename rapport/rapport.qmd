@@ -1,0 +1,688 @@
+---
+title: "Le vélo à Paris : comprendre et prévoir le trafic cyclable"
+subtitle: "Projet de séries chronologiques"
+date: today
+lang: fr
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    toc-title: "Sommaire"
+    number-sections: true
+    embed-resources: true
+    fig-align: center
+    theme: cosmo
+    fontsize: 1em
+    linestretch: 1.5
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| include: false
+library(data.table)
+r <- function(f) fread(file.path("..", "resultats", f))
+f <- function(x, k = 0) formatC(x, format = "f", digits = k, big.mark = " ", decimal.mark = ",")
+pc <- function(x, k = 0) paste0(f(x, k), " %")
+serie <- fread("../data/3_final/velo_paris_par_jour.csv")
+expl <- r("03_exploration_resume.csv")
+ev <- r("05_effets_evenements.csv")
+cus <- r("05_cusum.csv")
+rupt <- r("05_dates_ruptures.csv")
+var_ms <- r("04_part_variance_mstl.csv")
+coef_s <- r("04_coefficients_saisonniers.csv")
+st <- r("06_tests_stationnarite.csv")
+sar_c <- r("07_coefficients_sarima.csv"); sar_d <- r("07_diagnostic_sarima.csv"); sar_m <- r("07_modele_retenu.csv")
+sur <- r("07_sur_ajustement.csv"); garch <- r("07_garch_residus.csv")
+sx_c <- r("08_coefficients_sarimax.csv"); sx_d <- r("08_diagnostic_sarimax.csv")
+lr <- r("08_tests_rapport_vraisemblance.csv"); comp <- r("08_sarima_contre_sarimax.csv")
+parts <- r("08_part_expliquee.csv")
+glob <- r("10_scores_globaux.csv"); par_h <- r("10_scores_par_horizon.csv"); dm <- r("10_diebold_mariano.csv")
+fut <- r("10_prevision_futur.csv"); pires <- r("10_pires_jours.csv")
+cor_le <- r("07_correction_log_exp.csv"); bds <- r("07_test_bds.csv"); cgarch <- r("07_comparaison_garch.csv")
+s11 <- r("07_sarima_d1D1.csv"); veille <- r("08_meteo_du_jour_ou_de_la_veille.csv"); calib <- r("09_calibration_blocs.csv")
+b_opt <- calib[which.min(MAPE)]
+best1 <- par_h[h == 1][which.min(MAPE)]
+eff <- function(p) 100 * (exp(sx_c[parametre == p, estimation]) - 1)
+mape <- function(m, hh) par_h[modele == m & h == hh, MAPE]
+fig <- function(dossier, nom) knitr::include_graphics(file.path("..", "figures", dossier, nom))
+```
+
+::: {.callout-note appearance="simple"}
+**Problématique.** Quelle part du trafic cyclable parisien s'explique par le calendrier, la météo et les événements, et peut-on le prévoir à quelques jours ?
+
+**Réponse courte.** Sur 2021-2025, la semaine, la saison annuelle, le calendrier et la météo expliquent **`r pc(100 * sum(parts$part[1:5]))`** de la variance du log du trafic ; la dynamique propre de la série en ajoute **`r pc(100 * parts$part[6], 1)`**. À un jour, le meilleur modèle (`r best1$modele`) se trompe en moyenne de **`r pc(best1$MAPE, 1)`**, contre `r pc(mape("Naïf saisonnier", 1), 1)` pour la prévision naïve « comme la semaine dernière ».
+:::
+
+# Introduction
+
+Paris a vu son trafic cyclable presque doubler entre 2019 et 2026. Les compteurs automatiques de la Ville enregistrent chaque heure le passage des vélos sur les grands axes. Ces données forment une série chronologique riche : une tendance forte, deux saisonnalités (la semaine, l'année), des chocs (grève, confinements, Jeux olympiques) et une forte sensibilité à la météo.
+
+Le projet suit une démarche classique d'analyse de séries chronologiques : description, décomposition, stationnarité, modélisation SARIMA puis SARIMAX, mise en concurrence avec des méthodes alternatives et évaluation des prévisions. Tous les traitements sont faits en R, dans des scripts numérotés (`R/01_import.R` à `R/10_evaluation.R`) ; chaque figure de ce rapport est produite par l'un d'eux.
+
+# Données
+
+## Sources
+
+| Source | Contenu | Période |
+|---|---|---|
+| Ville de Paris (opendata.paris.fr) | Comptages horaires de tous les compteurs vélo | 2018 – nov. 2026 |
+| Météo-France, station Paris-Montsouris | Température, pluie, vent (journaliers) | 2018 – nov. 2026 |
+| calendrier.api.gouv.fr, data.education.gouv.fr | Jours fériés, vacances scolaires de Paris (zone C) | 2018 – 2027 |
+
+## Construction de la série
+
+Additionner simplement tous les compteurs donnerait une fausse tendance : leur nombre passe de 14 en 2018 à près de 170 en 2024. On construit donc un **panel de `r serie[1, compteurs_valides]` compteurs** installés avant 2019, fiables (au moins 90 % de jours valides), sans dérive de niveau et actifs jusqu'à la fin. Les jours de panne (2,7 % des jours compteur) sont détectés par comparaison avec le comportement commun des autres compteurs, puis remplacés par une estimation. Ces règles et leurs 16 figures de contrôle sont détaillées dans `R/02_nettoyage.R` et `data/LISEZMOI.md`.
+
+La série finale compte **`r f(nrow(serie))` jours**, du `r format(as.Date(min(serie$date)), "%d/%m/%Y")` au `r format(as.Date(max(serie$date)), "%d/%m/%Y")`, avec en moyenne `r f(mean(serie$velos))` vélos par jour.
+
+**Découpage.** Les modèles sont estimés sur la période **juin 2021 – 11 novembre 2025** (après la crise sanitaire, voir la partie 5) et évalués sur la **dernière année, du 12 novembre 2025 au 11 novembre 2026**, jamais utilisée pour l'estimation.
+
+# Exploration
+
+```{r}
+#| fig-cap: "La série complète. Bandes colorées : grève de décembre 2019, trois confinements, Jeux olympiques."
+fig("03_exploration", "01_serie_complete.png")
+```
+
+La série montre une **tendance croissante non linéaire** (rebond rapide après 2020 puis croissance plus lente), un **cycle hebdomadaire très régulier** et une **saison annuelle** marquée : creux en août et à Noël, pics en juin et en septembre.
+
+## Passage au log
+
+```{r}
+#| fig-cap: "Relation entre niveau et dispersion, et distributions."
+fig("03_exploration", "03_justification_log.png")
+```
+
+L'écart-type hebdomadaire croît avec la moyenne (élasticité `r f(expl[indicateur %like% "Élasticité", valeur], 2)`) : le modèle est **multiplicatif**, $X_t = m_t \times s_t \times z_t$, donc additif en log. Le $\lambda$ de Box-Cox optimal (Guerrero) vaut `r f(expl[indicateur %like% "Box-Cox", valeur], 2)`, entre la racine (comptages de Poisson) et le log. On retient le **log**, qui corrige l'essentiel de l'hétéroscédasticité et permet de lire chaque effet en pourcentage.
+
+## Deux saisonnalités
+
+```{r}
+#| fig-cap: "Saison hebdomadaire : profil par jour et par année, rapport week-end / semaine."
+fig("03_exploration", "04_saison_hebdomadaire.png")
+```
+
+Le mardi et le jeudi sont les jours les plus chargés ; le dimanche compte environ 30 % de vélos de moins que la moyenne. Ce profil est remarquablement stable d'une année à l'autre : le week-end représente environ **deux tiers** d'un jour ouvré (`r f(expl[indicateur %like% "2019", valeur], 2)` en 2019, `r f(expl[indicateur %like% "2025", valeur], 2)` en 2025). Le vélo parisien est avant tout un mode de déplacement domicile-travail.
+
+```{r}
+#| fig-cap: "Les deux saisons en même temps : jour de la semaine (vertical) × semaine de l'année (horizontal)."
+fig("03_exploration", "06_carte_semaine_annee.png")
+```
+
+```{r}
+#| fig-cap: "Nuages décalés, ACF et périodogramme."
+#| layout-ncol: 2
+fig("03_exploration", "09_nuages_decales.png")
+fig("03_exploration", "11_periodogramme.png")
+```
+
+La corrélation entre deux jours séparés de 7 jours (0,76) dépasse celle à 6 jours (0,67). Le **périodogramme** confirme la structure : des pics aux fréquences 1/7, 2/7 et 3/7 (les harmoniques du cycle hebdomadaire) et un pic à 1/365 (l'année).
+
+```{r}
+#| fig-cap: "ACF de log(vélos) sur la période d'apprentissage."
+fig("03_exploration", "10_acf_serie.png")
+```
+
+L'ACF décroît très lentement, avec des pics tous les 7 jours et une remontée vers 365 : la série brute **n'est pas stationnaire**.
+
+## Météo, calendrier et événements
+
+Pour isoler l'effet d'un facteur sans être gêné par la tendance et la semaine, on calcule un **trafic relatif** : le trafic du jour divisé par la médiane des mêmes jours de la semaine, trois semaines avant et trois semaines après.
+
+```{r}
+#| fig-cap: "Effet de la température, de la pluie et du vent sur le trafic relatif."
+fig("03_exploration", "12_meteo.png")
+```
+
+La **pluie** est le facteur météo le plus fort : une journée de plus de 10 mm fait perdre `r pc(-expl[indicateur %like% "pluie", valeur])` de vélos. Le froid fait baisser le trafic ; au-delà de 25 °C la courbe redescend légèrement. Le vent a un effet plus modéré.
+
+```{r}
+#| fig-cap: "Effet croisé température × pluie."
+fig("03_exploration", "13_pluie_temperature.png")
+```
+
+```{r}
+#| fig-cap: "Jours fériés, ponts, vacances scolaires et période de Noël."
+fig("03_exploration", "14_calendrier.png")
+```
+
+Un jour férié en semaine fait perdre `r pc(-expl[indicateur %like% "férié", valeur])` de trafic : il ressemble à un dimanche. Les vacances de Noël divisent le trafic par deux à trois chaque année ; les autres vacances le réduisent de 10 à 25 %.
+
+```{r}
+#| fig-cap: "Événements exceptionnels comparés à la même période un an plus tard (ou plus tôt pour les JO)."
+fig("03_exploration", "15_evenements.png")
+```
+
+# Décomposition
+
+## Filtrage linéaire
+
+```{r}
+#| fig-cap: "Gain des moyennes mobiles et application à 2023."
+fig("04_decomposition", "01_moyennes_mobiles.png")
+```
+
+La moyenne mobile arithmétique d'ordre 7 a pour fonction de transfert $H(\omega) = \frac{\sin(7\omega/2)}{7 \sin(\omega/2)}$, nulle aux fréquences $2\pi k / 7$ : elle **supprime exactement la saison hebdomadaire** tout en laissant passer les basses fréquences. L'ordre 365 ne garde que la tendance.
+
+## Décomposition classique, MSTL et régression de Fourier
+
+```{r}
+#| fig-cap: "decompose() avec une seule période (7 jours)."
+fig("04_decomposition", "02_decompose_hebdomadaire.png")
+```
+
+Avec une seule saison, la « tendance » de `decompose()` absorbe toute la saison annuelle. Les coefficients saisonniers $\hat s_j$ (somme nulle) donnent le profil de la semaine : `r paste(sprintf("%s %+.0f %%", coef_s$jour, coef_s$effet_pourcent), collapse = ", ")`.
+
+```{r}
+#| fig-cap: "MSTL : tendance, saison de 7 jours, saison de 365 jours et résidu."
+fig("04_decomposition", "03_mstl_deux_saisons.png")
+```
+
+```{r}
+#| fig-cap: "Part de la variance de chaque composante (MSTL) et amplitude de la saison hebdomadaire."
+fig("04_decomposition", "04_mstl_variance_amplitude.png")
+```
+
+Sur la période d'apprentissage, la **saison annuelle** porte `r pc(100 * var_ms[composante == "Saison 365 jours", part])` de la variance, la **semaine** `r pc(100 * var_ms[composante == "Saison 7 jours", part])` et la tendance seulement `r pc(100 * var_ms[composante == "Tendance", part], 1)`. Le résidu représente encore `r pc(100 * var_ms[composante == "Résidu", part])`. L'écart semaine / week-end est plus grand en hiver qu'en été.
+
+```{r}
+#| fig-cap: "Régression : tendance quadratique + jour de la semaine + série de Fourier annuelle."
+fig("04_decomposition", "05_regression_fourier.png")
+```
+
+Une saison annuelle paramétrique $s_t = \sum_{k=1}^{K} \alpha_k \sin(2\pi k t/365{,}25) + \beta_k \cos(2\pi k t/365{,}25)$ s'ajuste bien, mais le BIC réclame beaucoup d'harmoniques : elles servent à imiter des creux brutaux (Noël, août). Il vaut mieux décrire ces creux par des **indicatrices de calendrier**, ce que fera le SARIMAX. Les résidus de cette régression restent très autocorrélés et dépendent clairement de la pluie et des jours fériés.
+
+```{r}
+#| fig-cap: "Ce que la décomposition n'explique pas."
+fig("04_decomposition", "06_residus_contre_exogenes.png")
+```
+
+## Méthode par blocs et filtres complémentaires
+
+```{r}
+#| fig-cap: "Coefficients saisonniers par la méthode des blocs (Buys-Ballot), comparés à decompose()."
+fig("04_decomposition", "08_methode_par_blocs.png")
+```
+
+La **méthode par blocs** prend chaque semaine complète comme un bloc $j$. On calcule sa moyenne $\hat m_j$, puis $\hat s_k = \frac1J \sum_j (X_{j,k} - \hat m_j)$, dont la somme est nulle automatiquement. Elle redonne les coefficients de `decompose()` à 0,002 près, et les boîtes montrent en plus leur dispersion d'une semaine à l'autre.
+
+```{r}
+#| fig-cap: "Filtres sur la série hebdomadaire : moyenne mobile d'ordre 5, filtre (-3, 12, 17, 12, -3)/35, moyenne mobile modifiée d'ordre 52."
+fig("04_decomposition", "09_filtres_hebdomadaires.png")
+```
+
+Sur la série des moyennes hebdomadaires, on compare la moyenne mobile d'ordre 5 au filtre $(-3, 12, 17, 12, -3)/35$. Les deux ont des poids de somme 1, mais seul le second vérifie aussi $\sum k^2 c_k = 0$ : il **conserve les tendances quadratiques** et aplatit moins les creux d'août et de Noël. La période annuelle vaut 52 semaines, un nombre pair : c'est le cas où il faut la **moyenne mobile modifiée**, avec des poids $1/104$ aux extrémités et $1/52$ ailleurs. Elle annule la saison annuelle et ne garde que la tendance. Avec les données journalières, les périodes 7 et 365 sont impaires et la moyenne arithmétique simple suffit.
+
+
+## Prophet
+
+```{r}
+#| fig-cap: "Décomposition par Prophet : tendance par morceaux, saisons de Fourier, effets du calendrier."
+fig("04_decomposition", "07_prophet_composantes.png")
+```
+
+Prophet écrit $y(t) = g(t) + s(t) + h(t) + \varepsilon_t$ : tendance linéaire par morceaux, saisons de Fourier et effets des fêtes. La tendance progresse par paliers (forte croissance en 2021-2022, plateau en 2023, reprise en 2024-2025), avec les mêmes effets du calendrier.
+
+# Ruptures et événements
+
+```{r}
+#| fig-cap: "Détection d'une rupture par minimisation de la somme des carrés des résidus ."
+fig("05_ruptures", "01_rupture_unique_moindres_carres.png")
+```
+
+Sur la série corrigée des variations saisonnières (moyenne hebdomadaire), on cherche la date $\tau$ qui minimise la somme des carrés des résidus d'un modèle « moyenne avant / moyenne après ». Elle désigne la **sortie du premier confinement**.
+
+```{r}
+#| fig-cap: "Ruptures multiples (Bai-Perron), nombre choisi par BIC."
+fig("05_ruptures", "02_ruptures_multiples.png")
+```
+
+L'algorithme de Bai-Perron (programmation dynamique) retient `r nrow(rupt)` ruptures de niveau : `r paste(format(as.Date(rupt$rupture), "%B %Y"), collapse = " et ")`. La première est le **changement de régime post-Covid** (essor du vélo, pistes « coronapistes ») ; la seconde traduit la croissance continue, que des moyennes constantes ne peuvent décrire que par paliers.
+
+```{r}
+#| fig-cap: "Test de stabilité OLS-CUSUM."
+fig("05_ruptures", "03_cusum_stabilite.png")
+```
+
+Le test CUSUM rejette nettement la stabilité sur 2019-2025 (p = `r format.pval(cus$p[1], 2)`), mais **pas sur la période d'apprentissage** (p = `r f(cus$p[2], 2)`) : depuis juin 2021, une tendance linéaire stable suffit. Ce résultat justifie le découpage retenu.
+
+```{r}
+#| fig-cap: "Analyse d'intervention : effet de chaque événement, à météo et calendrier égaux."
+fig("05_ruptures", "04_analyse_intervention.png")
+```
+
+Une régression avec une indicatrice par événement (écarts-types de Newey-West pour tenir compte de l'autocorrélation) donne :
+
+```{r}
+knitr::kable(ev[, .(Événement = evenement, Début = debut, Fin = fin,
+                    `Effet (%)` = f(effet_pourcent, 0), `IC 95 %` = paste0("[", f(ic_bas), " ; ", f(ic_haut), "]"),
+                    `Vélos gagnés ou perdus` = f(velos_gagnes_ou_perdus))], align = "llrrrr")
+```
+
+La **grève de décembre 2019** a doublé le trafic : faute de métro, les Parisiens ont pris le vélo. Le **premier confinement** l'a divisé par cinq. Le troisième confinement, plus souple, n'a pas d'effet significatif. Pendant les **Jeux olympiques**, le trafic a été supérieur à un été normal.
+
+# Stationnarité
+
+```{r}
+#| fig-cap: "Tests ADF, Phillips-Perron et KPSS sur chaque version de la série."
+fig("06_stationnarite", "01_tableau_tests.png")
+```
+
+Les tests ADF et PP (H0 : racine unitaire) et KPSS (H0 : stationnarité) se complètent. Pour $y = \log X$, ADF et PP rejettent la racine unitaire. KPSS rejette la stationnarité autour d'une constante, mais pas autour d'une tendance : $y$ est **stationnaire autour d'une tendance déterministe**, sans racine unitaire ordinaire ($d = 0$).
+
+```{r}
+#| fig-cap: "Chronogrammes, ACF et PACF après différenciation."
+fig("06_stationnarite", "02_differenciations_acf_pacf.png")
+```
+
+La différence saisonnière $(I - B^7)\,y$ fait disparaître la semaine : son ACF décroît vite, avec un pic négatif au retard 7, signature d'un MA saisonnier. Tous les tests la déclarent stationnaire. Les choix automatiques sont partagés. `ndiffs` donne $d = 0$ avec ADF et PP, mais $d = 1$ avec KPSS, qui teste la stationnarité autour d'une constante et ignore la tendance. `nsdiffs` donne $D = 0$ (test OCSB) ou $D = 1$ (test de saisonnalité) : la saison hebdomadaire est à la frontière entre stochastique et déterministe, ce que la partie 7 va trancher. On part sur $d = 0$, $D = 1$.
+
+```{r}
+#| fig-cap: "Variance et moments glissants."
+fig("06_stationnarite", "03_variance_et_moments.png")
+```
+
+```{r}
+#| fig-cap: "ADF du package aTSA : trois types de régression, 0 à 7 retards augmentés."
+fig("06_stationnarite", "04_adf_trois_types_atsa.png")
+```
+
+Avec `aTSA::adf.test`, il faut **lire le bon type**. Pour $y$, le type 1 (ni constante ni tendance) ne rejette pas la racine unitaire, car il impose une moyenne nulle, ce qui est absurde pour un log autour de 10,7. Les types 2 et 3 la rejettent nettement. Le graphique de $y$ (une tendance) désigne le type 3 : la conclusion « stationnaire autour d'une tendance » est confirmée.
+
+
+# Modèle SARIMA
+
+## Identification et sélection
+
+```{r}
+#| fig-cap: "ACF et PACF de la série différenciée."
+fig("07_sarima", "01_identification_acf_pacf.png")
+```
+
+```{r}
+#| fig-cap: "La PACF est le dernier coefficient des équations de Yule-Walker ; estimation d'un AR par Yule-Walker et par maximum de vraisemblance."
+fig("07_sarima", "10_yule_walker_pacf.png")
+```
+
+La PACF $\alpha(h)$ est le dernier coefficient $\varphi_{hh}$ de la projection de $X_h$ sur $(X_0, \dots, X_{h-1})$. En résolvant $\Gamma_h \varphi = (\gamma(1), \dots, \gamma(h))'$ pour chaque $h$, on retrouve exactement `pacf()` (écart de l'ordre de $10^{-16}$). Les coefficients $\varphi_{h1}, \dots, \varphi_{hh}$ changent avec $h$, d'où la double indexation. Pour un AR ajusté sur $(I - B^7)\,y$, Yule-Walker et le maximum de vraisemblance donnent des estimations presque identiques, ce qui est attendu avec 1 600 observations. Rappel : on ne lit pas les ordres d'un ARMA sur l'ACF et la PACF. On s'en sert pour proposer des candidats, puis on choisit par critère d'information.
+
+
+```{r}
+#| fig-cap: "BIC des 120 SARIMA(p,0,q)(P,1,Q)_7 estimés."
+fig("07_sarima", "02_grille_bic.png")
+```
+
+On estime 120 modèles SARIMA$(p,0,q)(P,1,Q)_7$ avec dérive, pour $p \le 4$, $q \le 3$, $P \le 1$, $Q \le 2$. Le BIC retient le **`r sar_m$modele[1]`** (BIC `r f(sar_m$BIC[1], 1)`), alors que la recherche pas à pas d'`auto.arima` ne trouve que `r sub("auto.arima : ", "", sar_m$modele[2])` (BIC `r f(sar_m$BIC[2], 1)`).
+
+## Significativité, causalité, inversibilité
+
+```{r}
+#| fig-cap: "Coefficients (intervalles à 95 %) et inverses des racines des polynômes."
+fig("07_sarima", "04_coefficients_racines.png")
+```
+
+Tous les coefficients ARMA sont significatifs ($|z| > 1{,}96$) ; seule la dérive ne l'est pas (p = `r f(sar_c[parametre == "drift", p_valeur], 2)`). Les racines des polynômes AR sont hors du disque unité : le modèle est causal. Mais **le polynôme MA saisonnier $1 - 1{,}62\,z + 0{,}62\,z^2 = (1 - z)(1 - 0{,}62\,z)$ a une racine unité**.
+
+::: {.callout-important}
+**Diagnostic de sur-différenciation.** Le MA saisonnier compense la différence $(I - B^7)$ : $(I - B^7)$ suivi de $(1 - \Theta B^7)$ avec $\Theta \approx 1$ revient à ne pas différencier. Toutes les variantes essayées confirment ce diagnostic : avec $D = 1$, on trouve toujours $\Theta \approx -0{,}99$, et avec $D = 0$, un AR saisonnier égal à 1. **La saison hebdomadaire est donc déterministe** : le profil de la semaine ne dérive pas, il est le même chaque semaine à un bruit près. Conséquence pour le SARIMAX : on traitera la semaine par des indicatrices de jour, sans différence saisonnière.
+:::
+
+## Décomposition de Wold et intervalles de prévision
+
+```{r}
+#| fig-cap: "Poids ψ_k de la forme MA(∞) et demi-largeur de l'intervalle de prévision, calculée à la main et par forecast()."
+fig("07_sarima", "11_wold_intervalles.png")
+```
+
+En développant $\Phi(B)\Phi_s(B^7)(I - B^7)$ et $\Theta(B)\Theta_s(B^7)$, le modèle s'écrit $X_t = \sum_k \psi_k \varepsilon_{t-k}$. L'erreur de prévision à $h$ pas a pour variance $\sigma^2 \sum_{k<h} \psi_k^2$, d'où l'intervalle $\hat X_{t+h} \pm 1{,}96\,\sigma \sqrt{\sum_{k<h}\psi_k^2}$. Le calcul à la main coïncide exactement avec `forecast()`. Les $\psi_k$ décroissent lentement : les chocs laissent une trace durable, ce qui élargit vite les intervalles.
+
+
+## Diagnostic des résidus
+
+```{r}
+#| fig-cap: "Diagnostic des résidus : chronogramme, p-valeurs de Ljung-Box, ACF, PACF, ACF des carrés, histogramme, QQ-plot."
+fig("07_sarima", "05_diagnostic_residus.png")
+```
+
+```{r}
+knitr::kable(sar_d[, .(Test = test, H0 = hypothese_nulle, Statistique = f(statistique, 2), `p-valeur` = format.pval(p_valeur, 2))])
+```
+
+Les résidus sont **non corrélés** (Ljung-Box avec `fitdf` = p + q + P + Q). Ils ne sont **pas gaussiens** (queues épaisses, asymétrie à gauche), et leurs carrés sont corrélés. Test de sur-ajustement : un terme AR de plus n'est pas significatif (p = `r f(sur$p_valeur[1], 2)`). Un terme MA de plus est significatif mais dégrade nettement le BIC : le modèle est déjà riche, et ses paramètres se compensent entre eux. C'est un autre symptôme de la quasi-simplification AR / MA saisonnière.
+
+```{r}
+#| fig-cap: "Les 20 plus grosses erreurs du SARIMA."
+fig("07_sarima", "06_plus_grosses_erreurs.png")
+```
+
+Les plus grosses erreurs tombent presque toutes un jour férié, un jour de forte pluie ou pendant les vacances : le SARIMA ne peut pas les anticiper.
+
+## Effet ARCH
+
+```{r}
+#| fig-cap: "Test de McLeod-Li et GARCH(1,1) ajusté sur les résidus."
+fig("07_sarima", "07_garch_residus.png")
+```
+
+Les résidus au carré sont autocorrélés : il y a un **effet ARCH**. Un GARCH(1,1) à innovations de Student ajusté sur les résidus donne $\alpha = `r f(garch[parametre == "alpha1", estimation], 2)`$ et $\beta = `r f(garch[parametre == "beta1", estimation], 2)`$. La volatilité conditionnelle monte à chaque période de fêtes. Cette hétéroscédasticité vient surtout d'effets de calendrier mal pris en compte, pas d'une volatilité « financière » : c'est le calendrier qu'il faut modéliser.
+
+```{r}
+#| fig-cap: "GARCH complet : volatilité conditionnelle et stationnaire (tseries::garch), choix par BIC, prévision de la volatilité (rugarch), test BDS."
+fig("07_sarima", "13_garch_complet.png")
+```
+
+On compare ARCH(1), ARCH(2) et GARCH(1,1) avec `tseries::garch`. Le BIC retient le **`r cgarch[which.min(BIC), modele]`**. Comme $\alpha + \beta = `r f(cgarch[modele == "GARCH(1,1)", somme_alpha_beta], 2)` < 1$, la variance stationnaire existe : $\sigma = \sqrt{\omega / (1 - \alpha - \beta)} = `r f(cgarch[modele == "GARCH(1,1)", sigma_stationnaire], 3)`$, très proche de l'écart-type des résidus. La prévision de la volatilité revient vers ce niveau en une dizaine de jours. On prévoit la volatilité, pas le signe du résidu, dont la prévision vaut 0.
+
+**Bruit blanc faible, pas fort.** Les résidus passent le test de Ljung-Box : ils sont non corrélés, donc forment un bruit blanc faible. Mais leurs carrés sont corrélés, et le **test BDS** (H0 : i.i.d.) rejette très nettement (statistiques de `r f(min(bds$statistique), 1)` à `r f(max(bds$statistique), 1)`, p < $10^{-14}$). Ce n'est donc **pas un bruit blanc fort**. C'est l'exemple concret de la différence entre non-corrélation et indépendance.
+
+Enfin, `r f(93.8, 1)` % des observations tombent dans la bande « valeurs ajustées ± 1,96 σ̂ », un peu moins que les 95 % attendus : c'est l'effet des queues épaisses.
+
+
+```{r}
+#| fig-cap: "Prévision du SARIMA sur toute l'année de test, sans mise à jour."
+fig("07_sarima", "09_prevision_annee_test.png")
+```
+
+## Retour à l'échelle des vélos
+
+```{r}
+#| fig-cap: "Biais des prévisions à 1 jour selon la correction appliquée au retour du log."
+fig("07_sarima", "12_correction_log_exp.png")
+```
+
+Si $X = \log Z$ avec une erreur $\mathcal N(0, \sigma^2)$, alors $E[Z] = e^{\hat X + \sigma^2/2}$ : la prévision naïve $e^{\hat X}$ sous-estime. Sur l'année de test, elle sous-estime de `r pc(100 * cor_le$biais[1], 1)`. La correction log-normale $e^{\hat\sigma^2/2}$ (facteur `r f(cor_le$facteur[2], 3)`) ramène le biais à `r pc(100 * cor_le$biais[2], 1)`. Le facteur empirique $\frac1n\sum e^{\tilde\varepsilon_t}$, plus adapté à des résidus non gaussiens, le ramène à `r pc(100 * cor_le$biais[3], 1)`. Les bornes des intervalles, elles, se transforment directement par l'exponentielle. Toutes les prévisions du projet utilisent la correction (`biasadj = TRUE`).
+
+## L'alternative (d, D) = (1, 1)
+
+```{r}
+#| fig-cap: "Racines du SARIMA doublement différencié."
+#| out-width: "60%"
+fig("07_sarima", "15_racines_sarima_d1D1.png")
+```
+
+On essaie aussi de différencier deux fois. Le meilleur modèle par BIC est le `r sub("_7", "₇", s11$modele)`. Son polynôme MA a une racine de module **`r f(s11$racine_ma_min, 3)`** et son MA saisonnier vaut $\Theta \approx -0{,}99$ : **les deux différences sont compensées par des racines unité du MA**. C'est la signature d'une double sur-différenciation, cohérente avec les tests de la partie 6 ($d = 0$). Sans dérive possible (d + D = 2), ce modèle est aussi évalué hors échantillon en partie 10.
+
+## Simulation du modèle estimé
+
+```{r}
+#| fig-cap: "Deux années observées contre trois trajectoires simulées par le SARIMA."
+fig("07_sarima", "16_simulations.png")
+```
+
+Simuler le modèle estimé est un bon test de vraisemblance visuelle. Les trajectoires ont le bon niveau, la bonne semaine et la même ACF à court terme. Mais elles n'ont ni creux d'août ni creux de Noël, et elles dérivent plus que la réalité, car la différence saisonnière accumule les chocs. C'est une autre façon de voir ce que le SARIMA ne capture pas.
+
+# Modèle SARIMAX
+
+## Spécification
+
+D'après les parties 6 et 7, on écrit une **régression à erreurs SARIMA** :
+
+$$\log X_t = a + b\,t + \underbrace{\textstyle\sum_j \delta_j \mathbb 1_{\{\text{jour}_t = j\}}}_{\text{semaine}} + \underbrace{\textstyle\sum_{k=1}^{K} \alpha_k \sin\tfrac{2\pi k t}{365{,}25} + \beta_k \cos\tfrac{2\pi k t}{365{,}25}}_{\text{saison annuelle}} + \gamma' c_t + \eta' m_t + u_t,$$
+
+où $c_t$ regroupe le calendrier (férié en semaine, pont, vacances de Noël, d'été et autres, Jeux olympiques), $m_t$ la météo du jour (température et son carré, $\log(1 + \text{pluie})$, vent) et $u_t$ suit un SARIMA$(p,0,q)(P,0,Q)_7$. Les ordres et le nombre d'harmoniques $K$ sont choisis par BIC.
+
+```{r}
+#| fig-cap: "Sélection de la structure des erreurs et du nombre d'harmoniques."
+fig("08_sarimax", "01_selection.png")
+```
+
+## Effets estimés
+
+```{r}
+#| fig-cap: "Effet de chaque variable, en %, avec intervalle à 95 %."
+fig("08_sarimax", "02_effets_variables.png")
+```
+
+Chaque coefficient se lit comme un effet multiplicatif $e^{\beta} - 1$, toutes choses égales par ailleurs :
+
+- un **jour férié** en semaine : `r pc(eff("ferie"))` ; un **pont** : `r pc(eff("pont"))` ;
+- les **vacances de Noël** : `r pc(eff("vacances_noel"))`, les **autres vacances** : `r pc(eff("autres_vacances"))` (l'été n'a pas d'effet propre une fois la saison annuelle prise en compte) ;
+- les **Jeux olympiques** : `r sprintf("%+.0f %%", eff("jeux_olympiques"))` ;
+- **+1 °C** : `r sprintf("%+.1f %%", eff("temperature"))` ; **+1 m/s de vent** : `r pc(eff("vent"), 1)` ;
+- le dimanche compte `r pc(-eff("dimanche"))` de vélos de moins qu'un lundi.
+
+```{r}
+#| fig-cap: "Effet de la température, de la pluie et saison annuelle estimés."
+fig("08_sarimax", "03_effets_meteo_saison.png")
+```
+
+L'effet de la pluie est concave : 2 mm font déjà perdre environ `r pc(-100 * (exp(log1p(2) * sx_c[parametre == "pluie", estimation]) - 1))` de trafic, 20 mm environ `r pc(-100 * (exp(log1p(20) * sx_c[parametre == "pluie", estimation]) - 1))`. Une fois la météo et les vacances retirées, la saison annuelle fait apparaître le creux d'août et le pic de rentrée de septembre.
+
+## Utilité de chaque bloc : rapports de vraisemblance
+
+```{r}
+knitr::kable(lr[, .(`Bloc retiré` = bloc_retire, ddl, LR = f(LR, 1), `p-valeur` = format.pval(p_valeur, 2),
+                    `BIC sans le bloc` = f(BIC_sans, 1), `BIC complet` = f(BIC_complet, 1))])
+```
+
+Retirer n'importe quel bloc dégrade très nettement la vraisemblance. La météo est le bloc le plus important, devant le calendrier. Le SARIMA de la partie 7 n'est pas emboîté (il différencie), mais on peut comparer les variances d'erreur à un jour, qui sont sur la même échelle : l'écart-type passe de `r f(comp$ecart_type_erreur_1_jour[1], 3)` à `r f(comp$ecart_type_erreur_1_jour[2], 3)`, soit **`r pc(100 * (1 - comp$ecart_type_erreur_1_jour[2] / comp$ecart_type_erreur_1_jour[1]))` d'erreur en moins**.
+
+```{r}
+#| fig-cap: "Erreurs d'ajustement du SARIMA et du SARIMAX."
+fig("08_sarimax", "05_sarima_contre_sarimax_erreurs.png")
+```
+
+## Diagnostic
+
+```{r}
+#| fig-cap: "Diagnostic des résidus du SARIMAX."
+fig("08_sarimax", "04_diagnostic_residus.png")
+```
+
+```{r}
+knitr::kable(sx_d[, .(Test = test, H0 = hypothese_nulle, Statistique = f(statistique, 2), `p-valeur` = format.pval(p_valeur, 2))])
+```
+
+Une petite autocorrélation résiduelle subsiste. Le Ljung-Box à 21 retards rejette la blancheur, car l'échantillon est très grand et le test détecte des écarts minimes : les autocorrélations restent faibles en valeur absolue, comme le montre l'ACF. Les résidus restent non gaussiens, avec des queues épaisses dues à quelques journées exceptionnelles :
+
+```{r}
+#| fig-cap: "Les jours les moins bien expliqués."
+fig("08_sarimax", "06_erreurs_restantes.png")
+```
+
+## Corrélations croisées et météo de la veille
+
+```{r}
+#| fig-cap: "CCF entre l'écart de la météo à sa normale (Z_t) et le trafic inexpliqué par un SARIMAX sans météo (X_{t+h})."
+fig("08_sarimax", "09_ccf_meteo_trafic.png")
+```
+
+La **CCF** croise la météo, prise en écart à sa normale de saison, avec les innovations d'un SARIMAX sans météo. La pluie agit **le jour même** (corrélation de −0,58 à $h = 0$, presque rien à $h = \pm 1$). Pour la température, la corrélation s'étale sur les jours précédents. Ce n'est pas un effet causal : les écarts de température durent plusieurs jours, et il faut se méfier de ces corrélations fallacieuses.
+
+```{r}
+#| fig-cap: "SARIMAX avec la météo du jour, la météo de la veille, ou sans météo."
+#| out-width: "70%"
+fig("08_sarimax", "10_meteo_du_jour_ou_veille.png")
+```
+
+Une parade classique au problème de la météo future inconnue consiste à **décaler** la variable exogène, en expliquant $X_t$ par $Z_{t-1}$. Sur nos données, cette solution ne fonctionne pas. Avec la météo de la veille, l'écart-type de l'erreur vaut `r f(veille$ecart_type_erreur[2], 3)`, presque autant que sans météo (`r f(veille$ecart_type_erreur[3], 3)`), contre `r f(veille$ecart_type_erreur[1], 3)` avec la météo du jour. La pluie d'hier ne dit presque rien du trafic d'aujourd'hui : il faut une **vraie prévision météo**.
+
+## Réponse à la problématique : quelle part s'explique par quoi ?
+
+```{r}
+#| fig-cap: "Décomposition de la variance de log(vélos) : parts de Shapley de chaque bloc, puis dynamique ARMA."
+fig("08_sarimax", "07_part_expliquee.png")
+```
+
+La part de variance d'un bloc dépend de l'ordre dans lequel on ajoute les blocs. On fait donc la moyenne sur tous les ordres possibles : ce sont les **valeurs de Shapley** du $R^2$.
+
+```{r}
+knitr::kable(parts[, .(Bloc = bloc, `Part de la variance` = pc(100 * part, 1))])
+```
+
+**Le calendrier au sens large (semaine, saison, fériés, vacances) explique environ `r pc(100 * sum(parts$part[2:4]))` des variations du trafic, la météo `r pc(100 * parts$part[5])`.** La tendance pèse peu à l'échelle journalière, et la mémoire propre de la série (l'ARMA) n'ajoute que `r pc(100 * parts$part[6], 1)`. Il reste `r pc(100 * parts$part[7])` d'aléa.
+
+# Modèles concurrents
+
+On met les SARIMA en concurrence avec des méthodes qui pondèrent le passé autrement : selon son éloignement (lissages exponentiels), sa ressemblance (blocs) ou via un réseau de neurones.
+
+```{r}
+#| fig-cap: "Lissage de Holt-Winters additif (sur log, saison 7)."
+fig("09_concurrents", "01_holt_winters.png")
+```
+
+```{r}
+#| fig-cap: "Lissage simple, Holt, Holt-Winters : trois niveaux de complexité."
+fig("09_concurrents", "07_lissages_simple_holt_hw.png")
+```
+
+Les trois lissages exponentiels s'emboîtent :
+
+- le **lissage simple** estime un niveau, et sa prévision est plate ;
+- **Holt** y ajoute une pente, donc une prévision en droite ;
+- **Holt-Winters** y ajoute la saison.
+
+Seul ce dernier reproduit la semaine : sa somme des carrés des erreurs à un pas est divisée par deux.
+
+
+```{r}
+#| fig-cap: "TBATS : deux saisons trigonométriques à coefficients évolutifs."
+fig("09_concurrents", "02_tbats_composantes.png")
+```
+
+```{r}
+#| fig-cap: "Prophet avec jours fériés, vacances et météo."
+fig("09_concurrents", "03_prophet.png")
+```
+
+```{r}
+#| fig-cap: "Validation croisée intégrée à Prophet (cross_validation)."
+#| out-width: "70%"
+fig("09_concurrents", "08_prophet_validation_croisee.png")
+```
+
+La fonction `cross_validation` ré-estime Prophet sur une fenêtre qui s'agrandit, avec au moins deux ans de données et une nouvelle origine tous les 60 jours. Elle confirme une erreur stable entre 1 et 14 jours : Prophet ne dépend pas des derniers jours observés.
+
+
+```{r}
+#| fig-cap: "Ressemblance entre blocs : les 10 périodes passées les plus proches et leur suite."
+fig("09_concurrents", "04_ressemblance_blocs.png")
+```
+
+Pour la **ressemblance entre blocs**, on utilise l'estimateur de Nadaraya-Watson. On retire la tendance, puis chaque bloc passé $B_i$ (finissant le même jour de la semaine que le bloc courant) reçoit un poids $W_i \propto k\big((B_{courant} - B_i)/w\big)$, avec un noyau $k$ gaussien. La prévision est la moyenne pondérée des suites de ces blocs. La taille du bloc $b$ et la fenêtre $w$ sont choisies par **validation croisée** sur la dernière année d'apprentissage : $b = `r b_opt$b`$ jours, $w = `r f(b_opt$w, 2)`$ (MAPE de validation `r pc(b_opt$MAPE, 1)`).
+
+```{r}
+#| fig-cap: "LSTM : courbes d'apprentissage et prévision."
+fig("09_concurrents", "05_lstm.png")
+```
+
+Le **LSTM** reçoit la séquence des 28 derniers jours (trafic sans tendance et variables du jour) ainsi que le calendrier et la météo des 14 jours à prévoir, et il produit les 14 prévisions directement. Le **NNAR** est un perceptron à une couche cachée qui prend en entrée les retards de la série et les régresseurs ; c'est la moyenne de 20 réseaux.
+
+```{r}
+#| fig-cap: "Les neuf modèles, depuis une même origine (illustration)."
+fig("09_concurrents", "06_comparaison_28_jours.png")
+```
+
+# Évaluation des prévisions
+
+## Protocole
+
+Les paramètres sont estimés une seule fois sur l'apprentissage. Chaque jour $o$ de l'année de test, on suppose connues les données jusqu'à $o$ et on prévoit $o+1, \dots, o+14$ : c'est une **validation croisée à origine glissante**. Les modèles dynamiques mettent leur état à jour sans être ré-estimés. Cela fait 352 origines × 14 horizons, soit près de 5 000 prévisions pour chacun des 14 modèles. Les 4 jours de coupure générale des compteurs sont exclus.
+
+La **météo future** est inconnue au moment de prévoir. On encadre donc la réalité par deux versions du SARIMAX : « météo observée » (prévision météo parfaite) et « météo climatologique » (aucune information, météo moyenne de la saison).
+
+## Résultats
+
+```{r}
+#| fig-cap: "MAPE et REQM selon l'horizon."
+fig("10_evaluation", "01_erreur_selon_horizon.png")
+```
+
+```{r}
+knitr::kable(glob[, .(Modèle = modele, `REQM (vélos)` = f(REQM), `MAPE (%)` = f(MAPE, 1), `MAPE h = 1` = f(MAPE_h1, 1),
+                      `MAPE h = 7` = f(MAPE_h7, 1), `MAPE h = 14` = f(MAPE_h14, 1),
+                      `Couverture 95 %` = ifelse(is.na(couverture_95), "-", f(couverture_95, 0)))],
+             caption = "Scores sur l'année de test, triés par MAPE moyen (tous horizons).")
+```
+
+```{r}
+#| fig-cap: "MAPE par modèle et par horizon."
+fig("10_evaluation", "02_tableau_mape.png")
+```
+
+```{r}
+#| fig-cap: "Test de Diebold-Mariano : le meilleur modèle contre chacun des autres."
+fig("10_evaluation", "07_diebold_mariano.png")
+```
+
+Quatre enseignements :
+
+- **Le calendrier et la météo font la différence.** Les trois modèles qui les utilisent (SARIMAX, Prophet, NNAR) se détachent nettement : de `r pc(glob[modele == "Prophet", MAPE], 1)` à `r pc(glob[modele == "NNAR", MAPE], 1)` d'erreur moyenne. Les modèles qui n'exploitent que le passé de la série (SARIMA, Holt-Winters, TBATS, blocs) sont entre 18 et 24 %, à peine mieux que la prévision naïve (`r pc(glob[modele == "Naïf saisonnier", MAPE], 1)`).
+- **À 1 jour, le SARIMAX est le meilleur** (`r pc(mape("SARIMAX (météo observée)", 1), 1)`) : sa partie ARMA exploite l'écart de la veille. Au-delà, **Prophet** prend l'avantage (`r pc(glob[modele == "Prophet", MAPE_h7], 1)` à 7 jours) : il ne dépend pas des jours récents, donc ne propage pas les chocs ponctuels. Selon Diebold-Mariano, Prophet ne fait pas significativement mieux que le SARIMAX à 7 jours (p = `r f(dm[h == 7 & modele == "SARIMAX (météo observée)", p_valeur], 2)`), et c'est le SARIMAX qui l'emporte à 1 jour.
+- Les **modèles purement autorégressifs** se dégradent vite avec l'horizon : leur prévision retombe sur la semaine moyenne et ignore la saison annuelle.
+- Le **LSTM**, malgré les mêmes informations que le NNAR, fait moins bien : avec 1 600 jours d'apprentissage, un réseau récurrent a trop de paramètres pour ce qu'il y a à apprendre.
+
+## La valeur de la météo
+
+```{r}
+#| fig-cap: "SARIMAX avec météo observée ou climatologique."
+fig("10_evaluation", "04_valeur_de_la_meteo.png")
+```
+
+À 1 jour, l'erreur du SARIMAX passe de `r pc(mape("SARIMAX (météo observée)", 1), 1)` avec la météo observée à `r pc(mape("SARIMAX (météo climatologique)", 1), 1)` avec la météo climatologique. À 7 jours, elle passe de `r pc(mape("SARIMAX (météo observée)", 7), 1)` à `r pc(mape("SARIMAX (météo climatologique)", 7), 1)`. La version « météo de la veille » fait `r pc(mape("SARIMAX (météo de la veille)", 1), 1)` à 1 jour : un peu mieux que la climatologie, mais loin de la météo observée, ce que la CCF laissait prévoir. Une vraie prévision météo, fiable à 2-3 jours puis de moins en moins, se situe entre les deux extrêmes : **la qualité de la prévision du trafic dépend d'abord de celle de la prévision de pluie**.
+
+Le SARIMA doublement différencié (d = D = 1) fait `r pc(glob[modele == "SARIMA (d = D = 1)", MAPE], 1)` en moyenne, autant que le SARIMA avec d = 0, D = 1 (`r pc(glob[modele == "SARIMA", MAPE], 1)`) : différencier une fois de plus n'apporte rien, comme l'annonçait la racine unité de son MA. Le lissage simple et Holt, qui ignorent la semaine, sont les plus mauvais : `r pc(glob[modele == "Lissage simple", MAPE], 1)` et `r pc(glob[modele == "Holt", MAPE], 1)`.
+
+## Intervalles de prévision
+
+```{r}
+#| fig-cap: "Couverture réelle des intervalles à 80 % et 95 %."
+fig("10_evaluation", "03_couverture_intervalles.png")
+```
+
+Les intervalles à 95 % du SARIMA, du SARIMAX et de TBATS sont **bien calibrés** (environ `r pc(par_h[modele == "SARIMAX (météo observée)", mean(couverture_95)])` de couverture). Les intervalles à 80 % sont **trop larges** (84 à 87 %). C'est la marque des queues épaisses vues dans le diagnostic : la plupart des erreurs sont plus petites qu'une loi normale ne le prévoit, mais les rares grosses erreurs sont plus grosses. Avec la météo climatologique, les intervalles sont trop étroits (`r pc(par_h[modele == "SARIMAX (météo climatologique)", mean(couverture_95)])` à 95 %) : ils ignorent l'incertitude sur la météo elle-même.
+
+```{r}
+#| fig-cap: "Prévisions à 1 jour sur l'année de test et erreurs relatives."
+fig("10_evaluation", "05_prevision_1_jour_annee_test.png")
+```
+
+```{r}
+#| fig-cap: "Erreurs à 1 jour du meilleur modèle, par jour, par mois, et les 10 pires jours."
+fig("10_evaluation", "06_erreurs_meilleur_modele.png")
+```
+
+Les erreurs sont plus fortes le week-end, dont le trafic de loisir est plus sensible au temps qu'il fait, et en décembre-janvier. Les deux pires jours, les 6 et 7 janvier 2026, sont des journées de gel avec précipitations (neige ou verglas probables) : le trafic tombe à `r f(pires[1, observe])` vélos. Le modèle, qui ne connaît que la température moyenne et la hauteur de pluie, ne peut pas anticiper un tel effondrement. Une variable « neige / verglas » serait la première amélioration.
+
+## Prévision des 14 prochains jours
+
+```{r}
+#| fig-cap: "Prévision du 12 au 25 novembre 2026."
+fig("10_evaluation", "08_prevision_14_prochains_jours.png")
+```
+
+Le SARIMAX ré-estimé sur toutes les données prévoit en moyenne `r f(mean(fut$prevision))` vélos par jour du 12 au 25 novembre 2026. Les intervalles sont larges, car la météo de ces jours est inconnue (climatologie).
+
+# Conclusion
+
+1. **Ce qui fait le trafic cyclable parisien.** C'est d'abord le **calendrier** : la semaine de travail, la saison, les fériés et les vacances expliquent ensemble environ `r pc(100 * sum(parts$part[2:4]))` de la variance. Vient ensuite la **météo** (`r pc(100 * parts$part[5])`), surtout la pluie. La tendance, forte sur huit ans, pèse peu au jour le jour. Les événements exceptionnels ont des effets considérables mais ponctuels : grève ×2, confinement ÷5.
+2. **Ce que la méthodologie a révélé.**
+   - Le passage au log est justifié par la relation entre niveau et dispersion.
+   - La série est stationnaire autour d'une tendance.
+   - La racine unité du MA saisonnier montre que la semaine est déterministe, ce qui conduit à un SARIMAX sans différence saisonnière.
+   - Les résidus sont non gaussiens et présentent un effet ARCH lié aux fêtes.
+3. **Prévoir à quelques jours est possible.**
+   - Avec une bonne prévision météo, l'erreur est d'environ `r pc(best1$MAPE)` à 1 jour (SARIMAX) et `r pc(glob[modele == "Prophet", MAPE_h14])` à 14 jours (Prophet), contre 23 à 30 % pour la prévision naïve.
+   - Sans prévision météo, elle remonte à environ `r pc(mape("SARIMAX (météo climatologique)", 7))`.
+
+**Limites et pistes.**
+
+- Le panel de 27 compteurs historiques sous-estime peut-être la croissance sur les nouveaux axes.
+- Certains jours restent mal pris en compte : réveillons, journée sans voiture, grèves de 2023. Des indicatrices supplémentaires les traiteraient.
+- Les intervalles de prévision à 80 % sont trop larges, conséquence des queues épaisses.
+- La neige et le verglas manquent parmi les variables.
+- Une extension naturelle est le modèle horaire, avec deux saisonnalités imbriquées de 24 h et 168 h.
+
+# Annexe : méthodes envisagées mais non retenues {.unnumbered}
+
+
+
+- **Tendance logistique de Prophet** : elle suppose une saturation connue (une capacité maximale). Rien n'indique de plafond du trafic cyclable sur la période, et fixer un plafond arbitraire serait une hypothèse non justifiée.
+- **Stationnarité asymptotique sur ℕ, processus anticipatifs** : ce sont des résultats théoriques sur des processus simulés depuis $X_0$. Une série observée ne permet pas de les illustrer sans artifice.
+
+# Annexe : reproductibilité {.unnumbered}
+
+Lancer, depuis `projet_velo/`, les scripts `R/01_import.R` à `R/10_evaluation.R` dans l'ordre, puis `quarto render rapport/rapport.qmd`. Les figures sont dans `figures/`, les tableaux de résultats dans `resultats/`.

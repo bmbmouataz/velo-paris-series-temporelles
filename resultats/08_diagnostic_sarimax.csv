@@ -1,0 +1,5 @@
+test,hypothese_nulle,statistique,p_valeur
+"Ljung-Box (h = 21, fitdf = 4)",résidus non corrélés,38.7190226303838,0.00195542593220766
+Ljung-Box résidus² (h = 21),pas d'effet ARCH,127.297916381665,0
+Shapiro-Wilk,normalité,0.945778103228885,5.47576738688788e-24
+Jarque-Bera,normalité,1223.29914485176,0

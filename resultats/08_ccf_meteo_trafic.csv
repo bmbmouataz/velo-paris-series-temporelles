@@ -1,0 +1,46 @@
+variable,h,ccf
+Température (écart à la normale),-7,-0.0144209234875832
+Température (écart à la normale),-6,0.0126545393603632
+Température (écart à la normale),-5,0.0375949393136974
+Température (écart à la normale),-4,0.0867804653370999
+Température (écart à la normale),-3,0.11336432628362
+Température (écart à la normale),-2,0.175346826481513
+Température (écart à la normale),-1,0.166744254030153
+Température (écart à la normale),0,0.137403972511278
+Température (écart à la normale),1,0.0131666335585638
+Température (écart à la normale),2,0.0343119385956158
+Température (écart à la normale),3,0.0444967861170055
+Température (écart à la normale),4,0.0365844229240145
+Température (écart à la normale),5,0.0335522649033388
+Température (écart à la normale),6,0.0183414886489697
+Température (écart à la normale),7,0.0255105036835338
+"Pluie, log(1 + mm) (écart à la normale)",-7,0.0161715735731018
+"Pluie, log(1 + mm) (écart à la normale)",-6,0.00414530301802868
+"Pluie, log(1 + mm) (écart à la normale)",-5,-0.00774832769843464
+"Pluie, log(1 + mm) (écart à la normale)",-4,-0.0397963331550151
+"Pluie, log(1 + mm) (écart à la normale)",-3,-0.0831428794197939
+"Pluie, log(1 + mm) (écart à la normale)",-2,-0.0188511159805219
+"Pluie, log(1 + mm) (écart à la normale)",-1,-0.0809589782655787
+"Pluie, log(1 + mm) (écart à la normale)",0,-0.581309308384923
+"Pluie, log(1 + mm) (écart à la normale)",1,-0.115262855702019
+"Pluie, log(1 + mm) (écart à la normale)",2,0.0426465798679888
+"Pluie, log(1 + mm) (écart à la normale)",3,0.00541544912617007
+"Pluie, log(1 + mm) (écart à la normale)",4,0.0110991605595898
+"Pluie, log(1 + mm) (écart à la normale)",5,0.0529146608713756
+"Pluie, log(1 + mm) (écart à la normale)",6,0.0257454265291537
+"Pluie, log(1 + mm) (écart à la normale)",7,0.0600811133976726
+Vent (écart à la normale),-7,0.0433610539472611
+Vent (écart à la normale),-6,-0.02348863376994
+Vent (écart à la normale),-5,-0.0214820891412429
+Vent (écart à la normale),-4,-0.0578197948324059
+Vent (écart à la normale),-3,-0.0326749907275139
+Vent (écart à la normale),-2,-0.0173609869238628
+Vent (écart à la normale),-1,-0.0819274608602408
+Vent (écart à la normale),0,-0.163041342767999
+Vent (écart à la normale),1,-0.0132079040877472
+Vent (écart à la normale),2,0.0184937631316473
+Vent (écart à la normale),3,0.0551121397266466
+Vent (écart à la normale),4,0.0368319372075924
+Vent (écart à la normale),5,0.0228182945501806
+Vent (écart à la normale),6,-0.0130852584641493
+Vent (écart à la normale),7,0.0332317439475143

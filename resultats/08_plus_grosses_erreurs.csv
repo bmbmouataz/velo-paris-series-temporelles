@@ -1,0 +1,16 @@
+date,residu,jour_semaine,nom_jour_ferie,nom_vacances,pluie_mm,temperature_moyenne
+2021-12-25,-0.81042084711372,samedi,Jour de Noël,Vacances de Noël,1.2,9.5
+2024-12-24,-0.655709327225584,mardi,"",Vacances de Noël,0.6,7.2
+2022-12-25,-0.605319521660512,dimanche,Jour de Noël,Vacances de Noël,0,11.8
+2024-12-25,-0.60124467572747,mercredi,Jour de Noël,Vacances de Noël,0.2,9.5
+2023-12-25,-0.568275129103264,lundi,Jour de Noël,Vacances de Noël,0,11.8
+2024-10-09,-0.504495220021753,mercredi,"","",70.8,14.3
+2024-08-17,-0.491197220190428,samedi,"",Vacances d'Été,24,19.9
+2021-12-18,0.484949279988342,samedi,"",Vacances de Noël,0,6.2
+2022-02-18,0.483337683473586,vendredi,"","",3,10.3
+2021-09-19,0.465972249941728,dimanche,"","",12.3,18.2
+2024-03-02,-0.465124035443823,samedi,"","",18.1,6.5
+2022-12-24,-0.464833431190695,samedi,"",Vacances de Noël,1.2,10.8
+2025-07-06,-0.434300578259888,dimanche,"",Vacances d'Été,10.1,16.6
+2022-02-06,-0.433543102460377,dimanche,"","",7.4,9.4
+2023-05-07,-0.410337800410689,dimanche,"",Vacances de Printemps,5,15.5

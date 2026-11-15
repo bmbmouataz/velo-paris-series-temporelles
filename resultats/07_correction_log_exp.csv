@@ -1,0 +1,4 @@
+methode,facteur,biais
+exp(X̂) sans correction,1,0.011374766291237
+exp(X̂ + σ̂²/2),1.01555767287798,-0.00400594169372096
+Facteur empirique (1/n) Σ exp(ε̃),1.01294664880972,-0.00142461741402198

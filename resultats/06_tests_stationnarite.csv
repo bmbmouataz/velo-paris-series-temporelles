@@ -1,0 +1,21 @@
+serie,test,statistique,p_valeur,variance,lecture
+y = log(vélos),ADF (H0 : racine unitaire),-6.22442138929974,0.01,0.12741069497221,stationnaire
+y = log(vélos),Phillips-Perron (H0 : racine unitaire),-549.895222785711,0.01,0.12741069497221,stationnaire
+y = log(vélos),KPSS niveau (H0 : stationnaire),1.26143628419281,0.01,0.12741069497221,non stationnaire
+y = log(vélos),KPSS tendance (H0 : stationnaire),0.076430221818927,0.1,0.12741069497221,stationnaire
+(I - B) y,ADF (H0 : racine unitaire),-12.1743714935262,0.01,0.0789253385453068,stationnaire
+(I - B) y,Phillips-Perron (H0 : racine unitaire),-1137.61280123234,0.01,0.0789253385453068,stationnaire
+(I - B) y,KPSS niveau (H0 : stationnaire),0.00503742733457871,0.1,0.0789253385453068,stationnaire
+(I - B) y,KPSS tendance (H0 : stationnaire),0.00467732165688031,0.1,0.0789253385453068,stationnaire
+(I - B⁷) y,ADF (H0 : racine unitaire),-11.4073875880133,0.01,0.0871429599305983,stationnaire
+(I - B⁷) y,Phillips-Perron (H0 : racine unitaire),-702.140304608234,0.01,0.0871429599305983,stationnaire
+(I - B⁷) y,KPSS niveau (H0 : stationnaire),0.0086961073328244,0.1,0.0871429599305983,stationnaire
+(I - B⁷) y,KPSS tendance (H0 : stationnaire),0.00761750437283738,0.1,0.0871429599305983,stationnaire
+(I - B)(I - B⁷) y,ADF (H0 : racine unitaire),-18.2021550479103,0.01,0.0719837858903835,stationnaire
+(I - B)(I - B⁷) y,Phillips-Perron (H0 : racine unitaire),-1836.62030410553,0.01,0.0719837858903835,stationnaire
+(I - B)(I - B⁷) y,KPSS niveau (H0 : stationnaire),0.00561219604285507,0.1,0.0719837858903835,stationnaire
+(I - B)(I - B⁷) y,KPSS tendance (H0 : stationnaire),0.00362765901387757,0.1,0.0719837858903835,stationnaire
+Résidu de régression (tendance + Fourier + calendrier + météo),ADF (H0 : racine unitaire),-9.22921579310971,0.01,0.0540903311807301,stationnaire
+Résidu de régression (tendance + Fourier + calendrier + météo),Phillips-Perron (H0 : racine unitaire),-698.53440196829,0.01,0.0540903311807301,stationnaire
+Résidu de régression (tendance + Fourier + calendrier + météo),KPSS niveau (H0 : stationnaire),0.151537224027867,0.1,0.0540903311807301,stationnaire
+Résidu de régression (tendance + Fourier + calendrier + météo),KPSS tendance (H0 : stationnaire),0.151537224027867,0.0453856466434442,0.0540903311807301,non stationnaire

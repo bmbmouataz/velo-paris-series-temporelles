@@ -1,0 +1,12 @@
+# Fins de ligne normalisées (LF dans le dépôt)
+* text=auto eol=lf
+
+# Fichiers binaires
+*.png binary
+*.rds binary
+*.keras binary
+*.zip binary
+*.gz binary
+
+# Les rapports HTML générés ne comptent pas dans les statistiques de langage
+rapport/*.html linguist-generated=true
